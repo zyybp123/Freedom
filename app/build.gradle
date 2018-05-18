@@ -27,7 +27,7 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "HAS_LOG", "true"
             versionNameSuffix "-debug"
             minifyEnabled false
             zipAlignEnabled false
@@ -35,7 +35,7 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "HAS_LOG", "false"
             minifyEnabled false
             zipAlignEnabled true
             shrinkResources false
