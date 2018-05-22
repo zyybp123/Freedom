@@ -1,13 +1,78 @@
 package com.bpz.freedom;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
-public class HomeActivity extends AppCompatActivity {
+import com.bpz.commonlibrary.ui.bottombar.BottomBar;
+import com.bpz.commonlibrary.ui.bottombar.BottomBarBean;
+import com.bpz.commonlibrary.ui.bottombar.MyBottomBarAdapter;
+import com.bpz.freedom.fragment.TestFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapter.OnSelectedListener{
+
+    @BindView(R.id.bottomBar)
+    BottomBar bottomBar;
+    /**
+     * 主页选中图标
+     */
+    public static final int[] BGS_SELECTED = new int[]{
+            R.drawable.maintab_stack_icon_press,
+            R.drawable.maintab_category_icon_hover,
+            R.drawable.maintab_city_icon_hover,
+            R.drawable.maintab_stack_icon_press
+    };
+    /**
+     * 主页未选中图标
+     */
+    public static final int[] BGS_UN_SELECTED = new int[]{
+            R.drawable.maintab_stack_icon,
+            R.drawable.maintab_category_icon,
+            R.drawable.maintab_city_icon,
+            R.drawable.maintab_stack_icon
+    };
+    List<Fragment> fragmentList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ButterKnife.bind(this);
+
+        //获取主页的title数组
+        String[] titles = getResources().getStringArray(R.array.home_tab_title);
+        //fragment生成
+        fragmentList = new ArrayList<>();
+        //fragmentList.add(Temp.newInstance("1"));
+        fragmentList.add(new TestFragment());
+        //fragmentList.add(new CategoryFragment());
+        fragmentList.add(new TestFragment());
+        fragmentList.add(new TestFragment());
+        fragmentList.add(new TestFragment());
+        //fragment的数量必须和title的数量保持一致
+        List<BottomBarBean> bottomBarBeen = new ArrayList<>();
+        //数据填充
+        for (int i = 0; i < titles.length; i++) {
+            bottomBarBeen.add(new BottomBarBean(
+                    BGS_UN_SELECTED[i], BGS_SELECTED[i], titles[i], i == 0, fragmentList.get(i)));
+        }
+
+        //设置Adapter
+        MyBottomBarAdapter adapter = new MyBottomBarAdapter(bottomBarBeen,
+                getFragmentManager(), this);
+        bottomBar.setAdapter(adapter);
+        //默认选中第一页
+        adapter.setDefaultPosition(0);
+    }
+
+    @Override
+    public void onSelected(View itemView, Fragment currentFragment, BottomBarBean bottomBarBean, int position) {
+
     }
 }
