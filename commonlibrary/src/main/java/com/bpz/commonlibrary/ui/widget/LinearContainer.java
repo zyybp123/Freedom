@@ -1,4 +1,4 @@
-package com.bpz.commonlibrary.ui;
+package com.bpz.commonlibrary.ui.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -7,13 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.bpz.commonlibrary.LogUtil;
+import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.adapter.BaseLinearAdapter;
 
 
 /**
  * Created by Administrator on 2018/2/23.
  * 线性布局容器
+ * 很多时候动态添加少量内容时，没必要使用ListView或RecyclerView
  */
 
 public class LinearContainer extends LinearLayout {

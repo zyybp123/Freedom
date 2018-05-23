@@ -1,6 +1,8 @@
-package com.bpz.commonlibrary;
+package com.bpz.commonlibrary.util;
 
 import android.util.Log;
+
+import com.bpz.commonlibrary.BuildConfig;
 
 /**
  * Created by Administrator on 2018/5/18.

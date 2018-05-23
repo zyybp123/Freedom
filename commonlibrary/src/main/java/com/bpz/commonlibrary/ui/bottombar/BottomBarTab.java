@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bpz.commonlibrary.LogUtil;
+import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.R;
 
 

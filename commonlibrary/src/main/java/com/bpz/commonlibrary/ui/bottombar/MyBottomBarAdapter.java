@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bpz.commonlibrary.LogUtil;
+import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.adapter.BaseLinearAdapter;
 

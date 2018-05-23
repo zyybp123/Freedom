@@ -7,4 +7,8 @@
     <item name="fr_bottom_tab_badge" type="id" />
     <item name="fr_bottom_tab_icon_fr" type="id" />
     <item name="fr_frame_layout_container" type="id" />
+    <item name="fr_eye_open" type="drawable" />
+    <item name="fr_eye_close" type="drawable" />
+    <item name="fr_phone" type="drawable" />
+    <item name="fr_close" type="drawable" />
 </resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--封装自定义输入框的自定义属性-->
+    <declare-styleable name="CustomEditText">
+        <attr name="mLeftImgRes" format="reference" />
+        <attr name="mRightImgResFirst" format="reference" />
+        <attr name="mRightImgResSecond" format="reference" />
+        <attr name="mTextColor" format="color" />
+        <attr name="mDivideLineColor" format="color" />
+        <attr name="mHintColor" format="color" />
+        <attr name="mTextSize" format="dimension" />
+        <attr name="mBackgroundColor" format="color" />
+        <attr name="mPaddingStart" format="dimension" />
+        <attr name="mPaddingEnd" format="dimension" />
+        <attr name="mPaddingBottom" format="dimension" />
+        <attr name="mShowDivideLine" format="boolean" />
+        <attr name="mShowImgLeft" format="boolean" />
+        <attr name="mShowImgRightF" format="boolean" />
+        <attr name="mShowImgRightS" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="PTextView">
+        <attr name="pColor" format="color" />
+        <attr name="pCornerRadius" format="dimension" />
+        <attr name="pLeftTopCRadius" format="dimension" />
+        <attr name="pRightTopCRadius" format="dimension" />
+        <attr name="pRightBottomCRadius" format="dimension" />
+        <attr name="pLeftBottomCRadius" format="dimension" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+    </declare-styleable>
+</resources>
