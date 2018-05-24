@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.bpz.commonlibrary.ui.bottombar.BottomBar;
-import com.bpz.commonlibrary.ui.bottombar.BottomBarBean;
-import com.bpz.commonlibrary.ui.bottombar.MyBottomBarAdapter;
+import com.bpz.commonlibrary.entity.BottomBarBean;
+import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
 import com.bpz.freedom.fragment.TestFragment;
 
 import java.util.ArrayList;
@@ -16,10 +16,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapter.OnSelectedListener{
+public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapter.OnSelectedListener {
 
-    @BindView(R.id.bottomBar)
-    BottomBar bottomBar;
     /**
      * 主页选中图标
      */
@@ -38,7 +36,10 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
             R.drawable.maintab_city_icon,
             R.drawable.maintab_stack_icon
     };
+    @BindView(R.id.bottomBar)
+    BottomBar bottomBar;
     List<Fragment> fragmentList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

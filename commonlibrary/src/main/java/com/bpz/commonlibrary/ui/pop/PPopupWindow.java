@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
 /**
  * Created by Administrator on 2018/2/24.
  * 一个利用popupWindow的显示控件（为全屏的pop）
@@ -28,6 +27,10 @@ import java.util.Map;
 
 public class PPopupWindow {
     private static final String TAG = "PPopupWindow";
+    /**
+     * 布局参数，将子页面添加进容器时用到
+     */
+    FrameLayout.LayoutParams mLayoutParams;
     private PopupWindow pw;
     /**
      * 根布局
@@ -37,10 +40,6 @@ public class PPopupWindow {
      * 页面容器，由外部实现
      */
     private FrameLayout mPageContainer;
-    /**
-     * 布局参数，将子页面添加进容器时用到
-     */
-    FrameLayout.LayoutParams mLayoutParams;
     /**
      * pop内的页面map，按筛选页面的标识存储
      */
@@ -53,6 +52,10 @@ public class PPopupWindow {
     private int mTopMargin = 0;
     private int mRightMargin = 0;
     private int mBottomMargin = 0;
+    /**
+     * 记录pop是否显示
+     */
+    private boolean isShow = true;
 
     public PPopupWindow(Context context) {
         //加载根布局
@@ -69,6 +72,22 @@ public class PPopupWindow {
         createPop(context);
         //初始一个新的map
         pageMap = new HashMap<>();
+    }
+
+    /**
+     * 隐藏pop的方法
+     */
+    public void hidePop() {
+        if (pw != null) {
+            pw.dismiss();
+            isShow = false;
+        }
+    }
+
+    private void createLayoutParam() {
+        //创建一个布局参数
+        mLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     private void createPop(Context context) {
@@ -95,13 +114,6 @@ public class PPopupWindow {
         this.mRightMargin = mRightMargin;
         this.mBottomMargin = mBottomMargin;
     }
-
-    private void createLayoutParam() {
-        //创建一个布局参数
-        mLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
 
     /**
      * 初始化popWindow
@@ -189,21 +201,6 @@ public class PPopupWindow {
             pw.showAsDropDown(anchor, xOff, yOff);
         }
         isShow = true;
-    }
-
-    /**
-     * 记录pop是否显示
-     */
-    private boolean isShow = true;
-
-    /**
-     * 隐藏pop的方法
-     */
-    public void hidePop() {
-        if (pw != null) {
-            pw.dismiss();
-            isShow = false;
-        }
     }
 
     /**

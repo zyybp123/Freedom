@@ -35,6 +35,16 @@ public class BgResUtil {
     }
 
     /**
+     * 获取矩形图片
+     *
+     * @param color        颜色
+     * @param strokeEntity 边框信息
+     */
+    public static GradientDrawable getRecBg(ColorStateList color, StrokeEntity strokeEntity) {
+        return getDrawable(GradientDrawable.RECTANGLE, color, null, strokeEntity);
+    }
+
+    /**
      * 代码生成shape图片
      *
      * @param shape        形状 GradientDrawable.RECTANGLE（矩形）, OVAL（圆）, LINE（线）, RING（环形）
@@ -66,16 +76,6 @@ public class BgResUtil {
 
     private static boolean hasNativeStateListAPI() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-    }
-
-    /**
-     * 获取矩形图片
-     *
-     * @param color        颜色
-     * @param strokeEntity 边框信息
-     */
-    public static GradientDrawable getRecBg(ColorStateList color, StrokeEntity strokeEntity) {
-        return getDrawable(GradientDrawable.RECTANGLE, color, null, strokeEntity);
     }
 
     /**
@@ -178,18 +178,6 @@ public class BgResUtil {
         return layerDrawable;
     }
 
-
-    /////////////// VectorDrawable /////////////////////
-    @Nullable
-    public static Drawable getVectorDrawable(Context context, @DrawableRes int resVector) {
-        try {
-            return AppCompatResources.getDrawable(context, resVector);
-        } catch (Exception e) {
-            LogUtil.e(TAG, "Error in getVectorDrawable. resVector=" + resVector + ", resName=" + context.getResources().getResourceName(resVector) + e.getMessage());
-            return null;
-        }
-    }
-
     public static Bitmap vectorDrawableToBitmap(Context context, @DrawableRes int resVector) {
         Drawable drawable = getVectorDrawable(context, resVector);
         if (drawable != null) {
@@ -200,6 +188,17 @@ public class BgResUtil {
             return b;
         }
         return null;
+    }
+
+    /////////////// VectorDrawable /////////////////////
+    @Nullable
+    public static Drawable getVectorDrawable(Context context, @DrawableRes int resVector) {
+        try {
+            return AppCompatResources.getDrawable(context, resVector);
+        } catch (Exception e) {
+            LogUtil.e(TAG, "Error in getVectorDrawable. resVector=" + resVector + ", resName=" + context.getResources().getResourceName(resVector) + e.getMessage());
+            return null;
+        }
     }
 
 }

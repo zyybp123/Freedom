@@ -1,4 +1,4 @@
-package com.bpz.commonlibrary.adapter;
+package com.bpz.commonlibrary.adapter.base;
 
 /**
  * Created by ZYY

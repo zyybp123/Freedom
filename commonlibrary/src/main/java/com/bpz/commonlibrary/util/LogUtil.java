@@ -18,18 +18,6 @@ public class LogUtil {
     private LogUtil() {
     }
 
-    public static void d(String tag, String msg) {
-        if (IS_SHOW_LOG) {
-            Log.d(tag, msg);
-        }
-    }
-
-    public static void e(String tag, String msg) {
-        if (IS_SHOW_LOG) {
-            Log.e(tag, msg);
-        }
-    }
-
     public static void d(Object object, String msg) {
         if (IS_SHOW_LOG) {
             Log.d(object.getClass().getSimpleName(), msg);
@@ -46,8 +34,20 @@ public class LogUtil {
         d(TAG, msg);
     }
 
+    public static void d(String tag, String msg) {
+        if (IS_SHOW_LOG) {
+            Log.d(tag, msg);
+        }
+    }
+
     public static void e(String msg) {
         e(TAG, msg);
+    }
+
+    public static void e(String tag, String msg) {
+        if (IS_SHOW_LOG) {
+            Log.e(tag, msg);
+        }
     }
 
     public static String getLogTag(Object o) {

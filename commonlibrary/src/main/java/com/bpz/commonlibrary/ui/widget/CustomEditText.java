@@ -3,6 +3,7 @@ package com.bpz.commonlibrary.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -32,6 +33,15 @@ public class CustomEditText extends LinearLayout {
     public static final int DEFAULT_HINT_COLOR = 0x99FFFFFF;
     public static final int DEFAULT_TEXT_SIZE = 14;
     public static final int DEFAULT_PADDING = 0;
+    View mRootView;
+    ImageView customEtIvLeft;
+    EditText customEt;
+    ImageView customEtIvRightF;
+    ImageView customEtIvRightS;
+    LinearLayout customEtLl;
+    View customEtVBottom;
+    LinearLayout.LayoutParams customEtLayoutParams;
+    LinearLayout.LayoutParams customLlLayoutParams;
     //左边的图标
     @DrawableRes
     private int mLeftImgRes;
@@ -65,15 +75,16 @@ public class CustomEditText extends LinearLayout {
     private boolean mShowImgRightF = false;
     //是否显示右边的第二个图标 true 显示
     private boolean mShowImgRightS = false;
-
+    /**
+     * 控制密码是否可见，默认不可见
+     */
+    private boolean isSee = false;
     public CustomEditText(Context context) {
         this(context, null);
     }
-
     public CustomEditText(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public CustomEditText(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
@@ -100,16 +111,6 @@ public class CustomEditText extends LinearLayout {
         mShowImgRightS = typeArray.getBoolean(R.styleable.CustomEditText_mShowImgRightS, mShowImgRightS);
         initView(context);
     }
-
-    View mRootView;
-    ImageView customEtIvLeft;
-    EditText customEt;
-    ImageView customEtIvRightF;
-    ImageView customEtIvRightS;
-    LinearLayout customEtLl;
-    View customEtVBottom;
-    LinearLayout.LayoutParams customEtLayoutParams;
-    LinearLayout.LayoutParams customLlLayoutParams;
 
     private void initView(Context context) {
         //初始化视图
@@ -139,7 +140,7 @@ public class CustomEditText extends LinearLayout {
         customEtIvRightS.setImageResource(mRightImgResSecond);
     }
 
-    private void findView(View mRootView) {
+    private void findView(@NonNull View mRootView) {
         customEtIvLeft = mRootView.findViewById(R.id.fr_custom_et_iv_left);
         customEt = mRootView.findViewById(R.id.fr_custom_et);
         customEtIvRightF = mRootView.findViewById(R.id.fr_custom_et_iv_right_f);
@@ -285,11 +286,6 @@ public class CustomEditText extends LinearLayout {
             }
         });
     }
-
-    /**
-     * 控制密码是否可见，默认不可见
-     */
-    private boolean isSee = false;
 
     public void visualTransform(final ImageView transFormBtn) {
         transFormBtn.setVisibility(VISIBLE);

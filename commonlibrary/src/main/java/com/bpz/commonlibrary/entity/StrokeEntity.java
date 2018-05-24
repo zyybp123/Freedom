@@ -58,11 +58,11 @@ public class StrokeEntity {
                 drawable.setStroke(strokeEntity.width, strokeEntity.color,
                         strokeEntity.dashWidth, strokeEntity.dashGap);
             }
-        }else{
+        } else {
             int currColor = strokeEntity.color.getColorForState(drawable.getState(), Color.TRANSPARENT);
-            if (strokeEntity.color == null){
+            if (strokeEntity.color == null) {
                 setLine(drawable, strokeEntity, Color.TRANSPARENT);
-            }else{
+            } else {
                 setLine(drawable, strokeEntity, currColor);
             }
         }

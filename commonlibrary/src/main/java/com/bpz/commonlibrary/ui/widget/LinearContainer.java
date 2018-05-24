@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.bpz.commonlibrary.util.LogUtil;
-import com.bpz.commonlibrary.adapter.BaseLinearAdapter;
+import com.bpz.commonlibrary.adapter.base.BaseLinearAdapter;
 
 
 /**

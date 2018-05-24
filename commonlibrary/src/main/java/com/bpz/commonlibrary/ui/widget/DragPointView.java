@@ -44,36 +44,6 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
         initbg();
     }
 
-    public OnDragListencer getDragListencer() {
-        return dragListencer;
-    }
-
-    public void setDragListencer(OnDragListencer dragListencer) {
-        this.dragListencer = dragListencer;
-    }
-
-    public int getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int w = getMeasuredWidth();
-        int h = getMeasuredHeight();
-        if (w != h) { // 简单的将宽高搞成一样的,如果有更好的方法欢迎在我博客下方留言!
-            int x = Math.max(w, h);
-            setMeasuredDimension(x, x);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public void setBackgroundColor(int backgroundColor) {
-        this.backgroundColor = backgroundColor;
-        DragPointView.this.setBackgroundDrawable(createStateListDrawable((getHeight() > getWidth() ? getHeight()
-                : getWidth()) / 2, backgroundColor));
-    }
-
     private void initbg() {
         setGravity(Gravity.CENTER);
         getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
@@ -92,6 +62,52 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
         });
     }
 
+    /**
+     * @param radius 圆角角度
+     * @param color  填充颜色
+     * @return StateListDrawable 对象
+     * @author zy
+     */
+    public static StateListDrawable createStateListDrawable(int radius, int color) {
+        StateListDrawable bg = new StateListDrawable();
+        GradientDrawable gradientStateNormal = new GradientDrawable();
+        gradientStateNormal.setColor(color);
+        gradientStateNormal.setShape(GradientDrawable.RECTANGLE);
+        gradientStateNormal.setCornerRadius(50);
+        gradientStateNormal.setStroke(0, 0);
+        bg.addState(View.EMPTY_STATE_SET, gradientStateNormal);
+        return bg;
+    }
+
+    public OnDragListencer getDragListencer() {
+        return dragListencer;
+    }
+
+    public void setDragListencer(OnDragListencer dragListencer) {
+        this.dragListencer = dragListencer;
+    }
+
+    public int getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    @SuppressWarnings("deprecation")
+    public void setBackgroundColor(int backgroundColor) {
+        this.backgroundColor = backgroundColor;
+        DragPointView.this.setBackgroundDrawable(createStateListDrawable((getHeight() > getWidth() ? getHeight()
+                : getWidth()) / 2, backgroundColor));
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int w = getMeasuredWidth();
+        int h = getMeasuredHeight();
+        if (w != h) { // 简单的将宽高搞成一样的,如果有更好的方法欢迎在我博客下方留言!
+            int x = Math.max(w, h);
+            setMeasuredDimension(x, x);
+        }
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -332,23 +348,6 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
             }
         }
 
-    }
-
-    /**
-     * @param radius 圆角角度
-     * @param color  填充颜色
-     * @return StateListDrawable 对象
-     * @author zy
-     */
-    public static StateListDrawable createStateListDrawable(int radius, int color) {
-        StateListDrawable bg = new StateListDrawable();
-        GradientDrawable gradientStateNormal = new GradientDrawable();
-        gradientStateNormal.setColor(color);
-        gradientStateNormal.setShape(GradientDrawable.RECTANGLE);
-        gradientStateNormal.setCornerRadius(50);
-        gradientStateNormal.setStroke(0, 0);
-        bg.addState(View.EMPTY_STATE_SET, gradientStateNormal);
-        return bg;
     }
 
 }

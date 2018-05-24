@@ -18,6 +18,19 @@ public class DimensionUtil {
     }
 
     /**
+     * 根据基准设备的宽获取目标设备的宽
+     *
+     * @param context             上下文
+     * @param standardScreenValue 基准设备的屏幕宽度
+     * @param standardValue       在基准设备上的值
+     * @return 返回在目标设备上的宽
+     */
+    public static int getActualWidth(Context context, int standardScreenValue, int standardValue) {
+        int targetScreenWidth = totalSize(context).x;
+        return standardValue * targetScreenWidth / standardScreenValue;
+    }
+
+    /**
      * 获取屏幕的宽高
      *
      * @param context 上下文
@@ -29,19 +42,6 @@ public class DimensionUtil {
         int mTotalWidth = dm.widthPixels;
         int mTotalHeight = dm.heightPixels;
         return new Point(mTotalWidth, mTotalHeight);
-    }
-
-    /**
-     * 根据基准设备的宽获取目标设备的宽
-     *
-     * @param context             上下文
-     * @param standardScreenValue 基准设备的屏幕宽度
-     * @param standardValue       在基准设备上的值
-     * @return 返回在目标设备上的宽
-     */
-    public static int getActualWidth(Context context, int standardScreenValue, int standardValue) {
-        int targetScreenWidth = totalSize(context).x;
-        return standardValue * targetScreenWidth / standardScreenValue;
     }
 
     /**
@@ -82,6 +82,17 @@ public class DimensionUtil {
     }
 
     /**
+     * 获取状态栏高度（单位：px）
+     *
+     * @return 状态栏高度（单位：px）
+     */
+    public static int getStatusBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        return resources.getDimensionPixelSize(resourceId);
+    }
+
+    /**
      * 根据设备信息获取当前分辨率下指定单位对应的像素大小； px,dip,sp -> px
      *
      * @param context 上下文
@@ -99,17 +110,6 @@ public class DimensionUtil {
             r = context.getResources();
         }
         return TypedValue.applyDimension(unit, size, r.getDisplayMetrics());
-    }
-
-    /**
-     * 获取状态栏高度（单位：px）
-     *
-     * @return 状态栏高度（单位：px）
-     */
-    public static int getStatusBarHeight(Context context) {
-        Resources resources = context.getResources();
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        return resources.getDimensionPixelSize(resourceId);
     }
 
 }

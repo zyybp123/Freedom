@@ -1,4 +1,4 @@
-package com.bpz.commonlibrary.ui.bottombar;
+package com.bpz.commonlibrary.adapter;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -7,9 +7,11 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bpz.commonlibrary.entity.BottomBarBean;
+import com.bpz.commonlibrary.ui.bottombar.BottomBarTab;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.R;
-import com.bpz.commonlibrary.adapter.BaseLinearAdapter;
+import com.bpz.commonlibrary.adapter.base.BaseLinearAdapter;
 
 import java.util.List;
 
@@ -76,6 +78,40 @@ public class MyBottomBarAdapter extends BaseLinearAdapter {
         }
     }
 
+    /**
+     * 对操作能否进行做判断
+     *
+     * @param position 条目索引
+     * @return 满足条件才返回true
+     */
+    private boolean canDoIt(int position) {
+        if (fragmentManager == null) {
+            LogUtil.e(msgTag, "fragmentManager is null........");
+            return false;
+        }
+        if (bottomBarBeen == null) {
+            LogUtil.e(msgTag, "bottomBarBeen is null........");
+            return false;
+        }
+        if (position < 0) {
+            position = 0;
+        }
+        if (position >= bottomBarBeen.size()) {
+            position = bottomBarBeen.size() - 1;
+        }
+        BottomBarBean bottomBarBean = bottomBarBeen.get(position);
+        if (bottomBarBean == null) {
+            LogUtil.e(msgTag, "bottomBarBean is null........");
+            return false;
+        }
+        Fragment fragment = bottomBarBean.getFragment();
+        if (fragment == null) {
+            LogUtil.e(msgTag, "fragment is null........");
+            return false;
+        }
+        return true;
+    }
+
     @NonNull
     private Fragment getFragment(int position) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -117,40 +153,6 @@ public class MyBottomBarAdapter extends BaseLinearAdapter {
         if (canDoIt(position)) {
             getFragment(position);
         }
-    }
-
-    /**
-     * 对操作能否进行做判断
-     *
-     * @param position 条目索引
-     * @return 满足条件才返回true
-     */
-    private boolean canDoIt(int position) {
-        if (fragmentManager == null) {
-            LogUtil.e(msgTag, "fragmentManager is null........");
-            return false;
-        }
-        if (bottomBarBeen == null) {
-            LogUtil.e(msgTag, "bottomBarBeen is null........");
-            return false;
-        }
-        if (position < 0) {
-            position = 0;
-        }
-        if (position >= bottomBarBeen.size()) {
-            position = bottomBarBeen.size() - 1;
-        }
-        BottomBarBean bottomBarBean = bottomBarBeen.get(position);
-        if (bottomBarBean == null) {
-            LogUtil.e(msgTag, "bottomBarBean is null........");
-            return false;
-        }
-        Fragment fragment = bottomBarBean.getFragment();
-        if (fragment == null) {
-            LogUtil.e(msgTag, "fragment is null........");
-            return false;
-        }
-        return true;
     }
 
     /**

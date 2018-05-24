@@ -1,7 +1,9 @@
-package com.bpz.commonlibrary.ui.bottombar;
+package com.bpz.commonlibrary.entity;
 
 import android.app.Fragment;
 import android.support.annotation.DrawableRes;
+
+import com.bpz.commonlibrary.ui.bottombar.BottomBarTab;
 
 /**
  * Created by Administrator on 2017/10/23.
@@ -38,13 +40,13 @@ public class BottomBarBean {
     //标签绑定的Fragment
     private Fragment fragment;
 
-    public BottomBarBean(int iconRes, String title) {
-        this.title = title;
-    }
-
     public BottomBarBean(int iconRes, String title, boolean isSelected) {
         this(iconRes, title);
         this.isSelected = isSelected;
+    }
+
+    public BottomBarBean(int iconRes, String title) {
+        this.title = title;
     }
 
     public BottomBarBean(int iconResNormal, int iconResSelect, String title, boolean isSelected, Fragment fragment) {

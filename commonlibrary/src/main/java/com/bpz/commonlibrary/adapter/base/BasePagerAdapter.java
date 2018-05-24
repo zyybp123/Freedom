@@ -1,5 +1,6 @@
-package com.bpz.commonlibrary.adapter;
+package com.bpz.commonlibrary.adapter.base;
 
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,17 +21,16 @@ public class BasePagerAdapter<T> extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return mList==null ? 0 : mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
-    }
-
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
+    }
+
+    @Override
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        return view == object;
     }
 }

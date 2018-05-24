@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.R;
 
@@ -41,6 +42,9 @@ public class BottomBarTab extends FrameLayout {
      * 根布局
      */
     public View mRootView;
+    boolean mIsSelected;
+    BottomBarBean mBottomBarBean;
+    String logTag;
     /**
      * 图片
      */
@@ -58,10 +62,6 @@ public class BottomBarTab extends FrameLayout {
      */
     private TextView mBottomBadge;
     private FrameLayout mBottomIconFr;
-    boolean mIsSelected;
-    BottomBarBean mBottomBarBean;
-
-    String logTag;
 
     public BottomBarTab(@NonNull Context context) {
         this(context, null);
@@ -94,14 +94,6 @@ public class BottomBarTab extends FrameLayout {
     public void setMBottomBarBean(BottomBarBean mBottomBarBean) {
         this.mBottomBarBean = mBottomBarBean;
         //初始化
-        setStyle(mBottomBarBean);
-    }
-
-    @Override
-    public void setSelected(boolean selected) {
-        super.setSelected(selected);
-        //选中状态变更
-        mBottomBarBean.setSelected(selected);
         setStyle(mBottomBarBean);
     }
 
@@ -169,7 +161,6 @@ public class BottomBarTab extends FrameLayout {
         }
     }
 
-
     /**
      * 设置本地图片选中状态
      *
@@ -203,6 +194,14 @@ public class BottomBarTab extends FrameLayout {
             //未选中状态
             mBottomTitle.setTextColor(normalColor);
         }
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        super.setSelected(selected);
+        //选中状态变更
+        mBottomBarBean.setSelected(selected);
+        setStyle(mBottomBarBean);
     }
 
     //隐藏文字

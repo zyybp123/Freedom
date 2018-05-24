@@ -11,14 +11,14 @@ import java.util.List;
  */
 
 public abstract class BasePage<T> {
+    public List<T> data;
+    public OnItemClickListener<T> listener;
+    public boolean isWrapContent;
+    protected Context context;
     /**
      * 页面根布局
      */
     private View mRootView;
-    protected Context context;
-    public List<T> data;
-    public OnItemClickListener<T> listener;
-    public boolean isWrapContent;
 
     BasePage(Context context, List<T> data, OnItemClickListener<T> listener, boolean isWrapContent) {
         this.context = context;
