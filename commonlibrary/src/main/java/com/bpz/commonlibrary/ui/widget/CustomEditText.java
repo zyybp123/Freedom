@@ -2,6 +2,7 @@ package com.bpz.commonlibrary.ui.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,8 +29,8 @@ import com.bpz.commonlibrary.R;
  */
 
 public class CustomEditText extends LinearLayout {
-    public static final int DEFAULT_TEXT_COLOR = 0xFFFFFF;
-    public static final int DEFAULT_BACKGROUND_COLOR = 0x000000;
+    public static final int DEFAULT_TEXT_COLOR = Color.WHITE;
+    public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
     public static final int DEFAULT_HINT_COLOR = 0x99FFFFFF;
     public static final int DEFAULT_TEXT_SIZE = 14;
     public static final int DEFAULT_PADDING = 0;

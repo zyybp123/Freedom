@@ -38,6 +38,9 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+                if (count >= 30){
+                    cancel();
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
