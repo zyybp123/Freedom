@@ -36,7 +36,7 @@ android {
         }
         release {
             buildConfigField "boolean", "HAS_LOG", "false"
-            minifyEnabled false
+            minifyEnabled true
             zipAlignEnabled true
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -79,19 +79,19 @@ dependencies {
     implementation rootProject.ext.dependencies["okhttp"]
     implementation rootProject.ext.dependencies["okhttp-logging"]
     implementation rootProject.ext.dependencies["gson"]
-    //rx
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
-    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
-    implementation('com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar') {
-        exclude group: 'com.android.support'
-    }
     //glide
     implementation('com.github.bumptech.glide:glide:4.5.0') {
         exclude group: 'com.android.support'
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation('com.github.bumptech.glide:okhttp3-integration:4.5.0') {
+        exclude group: 'com.android.support'
+    }
+    //rx
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    implementation('com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar') {
         exclude group: 'com.android.support'
     }
     //picasso

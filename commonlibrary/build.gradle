@@ -13,14 +13,16 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("boolean", "HAS_LOG", "true");
+            buildConfigField("boolean", "HAS_LOG", "true")
+            buildConfigField("int", "URL_FLAG", rootProject.ext.urlFlags.dev)
         }
         release {
+            buildConfigField("boolean", "HAS_LOG", "false")
+            buildConfigField("int", "URL_FLAG", rootProject.ext.urlFlags.onLine)
             postprocessing {
-                buildConfigField("boolean", "HAS_LOG", "false")
                 removeUnusedCode false
                 removeUnusedResources false
-                obfuscate false
+                obfuscate true
                 optimizeCode false
                 proguardFile 'proguard-rules.pro'
             }
@@ -36,4 +38,31 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["support-v4"]
+    implementation rootProject.ext.dependencies["cardview"]
+    implementation rootProject.ext.dependencies["design"]
+    implementation rootProject.ext.dependencies["recyclerview"]
+    implementation rootProject.ext.dependencies["retrofit"]
+    implementation rootProject.ext.dependencies["retrofit-converter-gson"]
+    implementation rootProject.ext.dependencies["retrofit-adapter-rx"]
+    implementation rootProject.ext.dependencies["okhttp"]
+    implementation rootProject.ext.dependencies["okhttp-logging"]
+    implementation rootProject.ext.dependencies["gson"]
+    //glide
+    implementation('com.github.bumptech.glide:glide:4.5.0') {
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+    implementation('com.github.bumptech.glide:okhttp3-integration:4.5.0') {
+        exclude group: 'com.android.support'
+    }
+    //rx
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.2.1'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    implementation('com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar') {
+        exclude group: 'com.android.support'
+    }
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.3.2'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }

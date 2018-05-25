@@ -1,4 +1,4 @@
-package com.bpz.freedom.fragment;
+package com.bpz.commonlibrary.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 
 import com.bpz.commonlibrary.util.LogUtil;
 import com.trello.rxlifecycle2.components.RxFragment;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 
 /**
  * Created by ZYY
@@ -35,7 +31,7 @@ public abstract class BaseFragment<T> extends RxFragment {
      * 以状态层布局作为根布局
      */
     public View mRootView;
-    public Unbinder unbinder;
+    //public Unbinder unbinder;
     /**
      * 是否需要懒加载,默认不需要，false，不需要
      */
@@ -147,7 +143,7 @@ public abstract class BaseFragment<T> extends RxFragment {
         //留给子类初始化控件用
         initView();
         //此时的View一定存在，在此完成绑定等相关操作
-        unbinder = ButterKnife.bind(this, view);
+        //unbinder = ButterKnife.bind(this, view);
         //留给子类在绑定完控件后初始化页面
         viewHasBind();
         isInit = true;
@@ -227,7 +223,7 @@ public abstract class BaseFragment<T> extends RxFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        //unbinder.unbind();
         isInit = false;
         LogUtil.e(mFragmentTag + getTag(), "onDestroyView()");
     }

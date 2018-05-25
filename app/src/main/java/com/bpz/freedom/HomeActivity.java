@@ -74,6 +74,5 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
 
     @Override
     public void onSelected(View itemView, Fragment currentFragment, BottomBarBean bottomBarBean, int position) {
-
     }
 }
