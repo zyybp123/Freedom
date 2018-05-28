@@ -5,6 +5,8 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -12,8 +14,8 @@ import java.util.List;
  * on 2018/1/20 10:15.
  */
 
-public class BasePagerAdapter<T> extends PagerAdapter {
-    private List<T> mList;
+public abstract class BasePagerAdapter<T> extends PagerAdapter {
+    public List<T> mList;
 
     public BasePagerAdapter(List<T> mList) {
         this.mList = mList;
@@ -22,6 +24,14 @@ public class BasePagerAdapter<T> extends PagerAdapter {
     @Override
     public int getCount() {
         return mList == null ? 0 : mList.size();
+    }
+
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup container, int position) {
+        View itemView = getItemView(container, position);
+        container.addView(itemView);
+        return itemView;
     }
 
     @Override
@@ -33,4 +43,12 @@ public class BasePagerAdapter<T> extends PagerAdapter {
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
+    @NonNull
+    public abstract View getItemView(ViewGroup container, int position);
 }

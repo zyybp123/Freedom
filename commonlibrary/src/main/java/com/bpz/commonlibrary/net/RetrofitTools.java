@@ -37,11 +37,6 @@ public class RetrofitTools {
     private OkHttpClient okClient;
     private Retrofit retrofit;
 
-    /**
-     * 构造 初始化相应参数
-     *
-     * @param baseUrl 基础URL
-     */
     private RetrofitTools(String baseUrl, Map<String, String> baseUrlMap) {
         //设置OkHttpClitent;
         okClient = new OkHttpClient.Builder()
@@ -53,7 +48,7 @@ public class RetrofitTools {
                 .addInterceptor(Interceptors.getHeaderInterceptor(baseUrlMap, baseUrl))//添加header拦截器
                 .addInterceptor(new ProgressInterceptor())//添加进度拦截器
                 //.addNetworkInterceptor(Interceptors.getLogInterceptor())//添加日志拦截器,大文件下载会产生OOM
-                //.cookieJar(new MyCookieJar())//添加cookie的处理
+                .cookieJar(new MyCookieJar())//添加cookie的处理
                 .build();
         // 初始化Retrofit
         retrofit = new Retrofit.Builder()
@@ -64,12 +59,6 @@ public class RetrofitTools {
                 .build();
     }
 
-    /**
-     * 单例模式获取实例
-     *
-     * @param baseUrl 基础URL
-     * @return 返回本类实例
-     */
     public static RetrofitTools getInstance(String baseUrl, Map<String, String> baseUrlMap) {
         if (mInstance == null) {
             synchronized (RetrofitTools.class) {

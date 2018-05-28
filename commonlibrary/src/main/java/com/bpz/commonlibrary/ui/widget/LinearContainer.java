@@ -1,14 +1,19 @@
 package com.bpz.commonlibrary.ui.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.adapter.base.BaseLinearAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -41,7 +46,10 @@ public class LinearContainer extends LinearLayout {
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(@NotNull Context context, AttributeSet attrs) {
+        TypedArray typeArray = context.getTheme().obtainStyledAttributes(attrs,
+                R.styleable.LinearContainer, 0, 0);
+        mIsAverage = typeArray.getBoolean(R.styleable.LinearContainer_mIsAverage, mIsAverage);
         //获取此线性布局的方向,设置布局参数
         int orientation = getOrientation();
         if (orientation == VERTICAL) {

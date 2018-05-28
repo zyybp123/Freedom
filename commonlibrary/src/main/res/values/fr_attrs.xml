@@ -28,4 +28,9 @@
         <attr name="strokeColor" format="color" />
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="LinearContainer">
+        <attr name="mIsAverage" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="PBanner">
+    </declare-styleable>
 </resources>
