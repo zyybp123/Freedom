@@ -15,7 +15,8 @@ import java.util.List;
  */
 
 public abstract class BasePagerAdapter<T> extends PagerAdapter {
-    public List<T> mList;
+    protected List<T> mList;
+    private boolean isNotify;
 
     public BasePagerAdapter(List<T> mList) {
         this.mList = mList;
@@ -46,7 +47,18 @@ public abstract class BasePagerAdapter<T> extends PagerAdapter {
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        return POSITION_NONE;
+        if (!isNotify) {
+            return super.getItemPosition(object);
+        } else {
+            return POSITION_NONE;
+        }
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        isNotify = true;
+        super.notifyDataSetChanged();
+        isNotify = false;
     }
 
     @NonNull

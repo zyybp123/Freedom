@@ -18,6 +18,7 @@
         <attr name="mShowImgRightF" format="boolean" />
         <attr name="mShowImgRightS" format="boolean" />
     </declare-styleable>
+    <!--自定义的textView-->
     <declare-styleable name="PTextView">
         <attr name="pColor" format="color" />
         <attr name="pCornerRadius" format="dimension" />
@@ -28,9 +29,31 @@
         <attr name="strokeColor" format="color" />
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
+    <!--自定义的线性布局容器-->
     <declare-styleable name="LinearContainer">
         <attr name="mIsAverage" format="boolean" />
     </declare-styleable>
+    <!--banner-->
     <declare-styleable name="PBanner">
+        <attr name="ilWidth" format="dimension" />
+        <attr name="ilHeight" format="dimension" />
+        <attr name="ilColor" format="color" />
+        <attr name="piWidth" format="dimension" />
+        <attr name="piHeight" format="dimension" />
+        <attr name="piSelectedColor" format="color" />
+        <attr name="piNormalColor" format="color" />
+        <attr name="piMargin" format="dimension" />
+        <attr name="mTitleSize" format="dimension" />
+        <attr name="mTitleColor" format="color" />
+        <attr name="mNumSize" format="dimension" />
+        <attr name="showModel" format="enum">
+            <enum name="NONE" value="0" />
+            <enum name="ONLY_NUM" value="1" />
+            <enum name="ONLY_TITLE" value="2" />
+            <enum name="TITLE_NUM" value="3" />
+            <enum name="ONLY_INDICATOR" value="4" />
+            <enum name="TITLE_INDICATOR" value="5" />
+        </attr>
+        <attr name="periodicTime" format="integer" />
     </declare-styleable>
 </resources>

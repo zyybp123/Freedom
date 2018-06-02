@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/p_banner_vp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/p_banner_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v4.view.ViewPager>
+    </android.support.v7.widget.RecyclerView>
 
     <FrameLayout
         android:id="@+id/p_banner_fl_in"
@@ -18,7 +18,7 @@
         android:layout_gravity="bottom"
         android:background="#66000000"
         android:orientation="horizontal"
-        android:visibility="gone">
+        >
 
         <TextView
             android:id="@+id/p_banner_title"
@@ -43,6 +43,7 @@
             android:paddingStart="10dp"
             android:singleLine="true"
             android:text="0/0"
+            android:visibility="gone"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
@@ -50,6 +51,7 @@
             android:id="@+id/p_banner_indicator"
             android:layout_width="40dp"
             android:layout_height="match_parent"
+            android:visibility="gone"
             android:background="@android:color/white">
 
         </com.bpz.commonlibrary.ui.widget.LinearContainer>

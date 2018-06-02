@@ -14,10 +14,12 @@ import com.bpz.commonlibrary.ui.banner.PBanner;
 import com.bpz.commonlibrary.ui.widget.CustomEditText;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.freedom.ImgUrl;
 import com.bpz.freedom.R;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,10 +31,7 @@ public class TestFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        List<String> mList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            mList.add("" + i);
-        }
+        List<String> mList = new ArrayList<>(Arrays.asList(ImgUrl.IMG_S));
         stateLayout = (StateLayout) inflater.inflate(R.layout.base_state_layout, null);
         stateLayout.setListener(new StateLayout.OnRetryListener() {
             @Override
@@ -40,23 +39,14 @@ public class TestFragment extends Fragment {
                 LogUtil.e("---retry click---");
             }
         });
-        PBanner<String> banner = (PBanner<String>) inflater
-                .inflate(R.layout.banner, null);
-        banner.setData(new PBanner.ImgShowListener<String>() {
-            @Override
-            public void setImgShow(ImageView imageView, String data) {
-                Glide.with(getActivity()).load(data).into(imageView);
-            }
-        },mList);
-        banner.startLoop();
-        stateLayout.setStatePage(StateLayout.State.ON_SUCCESS, banner);
+
         return stateLayout;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        stateLayout.showCurrentPage(StateLayout.State.ON_NO_NET);
+        stateLayout.showCurrentPage(StateLayout.State.ON_SUCCESS);
         /*new Timer().schedule(new TimerTask() {
             int count = -2;
 

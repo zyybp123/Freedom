@@ -3,6 +3,8 @@ package com.bpz.commonlibrary.ui.pop;
 import android.content.Context;
 import android.view.View;
 
+import com.bpz.commonlibrary.interf.listener.OnItemClickListener;
+
 import java.util.List;
 
 /**
@@ -53,7 +55,4 @@ public abstract class BasePage<T> {
         return this.getClass().getName();
     }
 
-    public interface OnItemClickListener<T> {
-        void onClick(int position, T data);
-    }
 }
