@@ -1,28 +1,22 @@
 package com.bpz.commonlibrary.ui.banner;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bpz.commonlibrary.R;
-import com.bpz.commonlibrary.adapter.BannerPagerAdapter;
-import com.bpz.commonlibrary.adapter.base.BasePagerAdapter;
+import com.bpz.commonlibrary.adapter.Adapter2Banner;
+import com.bpz.commonlibrary.interf.listener.OnImgShowListener;
+import com.bpz.commonlibrary.interf.listener.OnItemClickListener;
 import com.bpz.commonlibrary.ui.widget.LinearContainer;
-import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.PeriodicUtil;
 
 import java.util.ArrayList;
@@ -35,7 +29,8 @@ import java.util.Locale;
  * 指示器的宽高，颜色，间距,是否自动循环，是否循环
  * 模式：标题，数字，数字+标题，指示器，指示器+标题，
  */
-public class PBanner<T> extends FrameLayout{
+public class PBanner<T> extends FrameLayout implements
+        OnItemClickListener,OnImgShowListener<T>{
     private static final String TAG = "PBanner";
     /**
      * 指示器层的宽，高，背景颜色
@@ -77,7 +72,7 @@ public class PBanner<T> extends FrameLayout{
     private PeriodicUtil periodicUtil;
     private int currentPage = -1;
     private List<T> mDataList;
-    private ImgShowListener<T> imgShowListener;
+    private OnImgShowListener<T> imgShowListener;
     @DrawableRes
     private int defaultEmptyImg = R.drawable.fr_empty;
     private boolean isAutoLoop = true;
@@ -106,6 +101,18 @@ public class PBanner<T> extends FrameLayout{
         mTvTitle = rootView.findViewById(R.id.p_banner_title);
         mTvNum = rootView.findViewById(R.id.p_banner_num);
         mLCIndicator = rootView.findViewById(R.id.p_banner_indicator);
+        mRecycler.setAdapter(new Adapter2Banner<>(mDataList,
+                this,this));
+    }
+
+    @Override
+    public void onItemClick(int position, Object itemData) {
+
+    }
+
+    @Override
+    public void onImageShow(ImageView imageView, T data) {
+
     }
 
 
@@ -117,16 +124,5 @@ public class PBanner<T> extends FrameLayout{
         int ONLY_INDICATOR = 4;
         int TITLE_INDICATOR = 5;
     }
-
-    public interface ImgShowListener<T> {
-        /**
-         * 此方法为外部实现，imageView的展示
-         *
-         * @param imageView 图片控件
-         * @param data      banner数据
-         */
-        void setImgShow(ImageView imageView, T data);
-    }
-
 
 }
