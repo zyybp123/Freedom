@@ -65,4 +65,6 @@ dependencies {
     //picasso
     implementation 'com.squareup.picasso:picasso:2.3.2'
     implementation 'org.jetbrains:annotations-java5:15.0'
+    //sonic
+    implementation 'com.tencent.sonic:sdk:3.0.0'
 }
