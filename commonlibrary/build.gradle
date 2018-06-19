@@ -67,4 +67,6 @@ dependencies {
     implementation 'org.jetbrains:annotations-java5:15.0'
     //sonic
     implementation 'com.tencent.sonic:sdk:3.0.0'
+    //BRVAH
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
 }

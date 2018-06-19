@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Administrator on 2018/5/14.
  * 尺寸工具类
@@ -37,7 +39,7 @@ public class DimensionUtil {
      * @return 返回 Point x为宽，y为高
      */
     @NonNull
-    public static Point totalSize(Context context) {
+    public static Point totalSize(@NotNull Context context) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         int mTotalWidth = dm.widthPixels;
         int mTotalHeight = dm.heightPixels;
@@ -64,7 +66,7 @@ public class DimensionUtil {
      * @param dpValue dp值
      * @return 返回px值
      */
-    public static int dip2px(Context context, float dpValue) {
+    public static int dip2px(@NotNull Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
@@ -76,7 +78,7 @@ public class DimensionUtil {
      * @param pxValue px值
      * @return 返回dp值
      */
-    public static int px2dip(Context context, float pxValue) {
+    public static int px2dip(@NotNull Context context, float pxValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }

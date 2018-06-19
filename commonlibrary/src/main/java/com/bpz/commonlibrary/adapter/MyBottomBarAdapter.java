@@ -129,11 +129,17 @@ public class MyBottomBarAdapter extends BaseLinearAdapter {
                 //隐藏之前的Fragment
                 fragmentTransaction.hide(currentFragment);
             }
-            //被点击Fragment还没添加,先添加,后显示
-            fragmentTransaction
-                    .add(R.id.fr_frame_layout_container, fragment, title)
-                    .show(fragment)
-                    .commit();
+            try {
+                //被点击Fragment还没添加,先添加,后显示
+                fragmentTransaction
+                        .add(R.id.fr_frame_layout_container, fragment, title)
+                        .show(fragment)
+                        .commit();
+            } catch (Exception e) {
+                LogUtil.e(msgTag, "Exception: " + e);
+                //如果抛出异常，说明添加失败，直接展示出来
+                fragmentTransaction.show(fragment).commit();
+            }
         }
         //将选中的Fragment置为当前Fragment
         currentFragment = fragment;

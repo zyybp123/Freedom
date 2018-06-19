@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.bpz.commonlibrary.LibApp;
 import com.bpz.commonlibrary.manager.MyActivityManager;
 import com.bpz.commonlibrary.util.LogUtil;
 
@@ -25,6 +26,7 @@ public class Freedom extends Application {
         super.onCreate();
         //初始化
         mContext = this;
+        LibApp.init(this);
         mActivityManager = MyActivityManager.getInstance();
         activityLifeManage();
     }
