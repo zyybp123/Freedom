@@ -1,11 +1,11 @@
 package com.bpz.commonlibrary.net;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-import com.bpz.commonlibrary.interf.AppEnvironment;
+import com.bpz.commonlibrary.interf.ConfigFields;
 import com.bpz.commonlibrary.net.interceptor.Interceptors;
 import com.bpz.commonlibrary.net.interceptor.ProgressInterceptor;
-import com.google.gson.Gson;
 
 
 import org.jetbrains.annotations.Contract;
@@ -28,42 +28,42 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * retrofit请求方法统一管理类
  */
 
-public class RetrofitTools {
+public class RetrofitTool {
 
     /**
      * 本类实例
      */
-    private static RetrofitTools mInstance = null;
+    private static RetrofitTool mInstance = null;
     private OkHttpClient okClient;
     private Retrofit retrofit;
 
-    private RetrofitTools(String baseUrl, Map<String, String> baseUrlMap) {
+    private RetrofitTool(String baseUrl, Map<String, String> baseUrlMap) {
         //设置OkHttpClitent;
         okClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.MINUTES)        //读取超时 60min
-                .connectTimeout(2, TimeUnit.MINUTES)      //连接超时 2min
-                .writeTimeout(60, TimeUnit.MINUTES)       //写超时   60min
-                .retryOnConnectionFailure(true)                   //是否自动重连
+                .readTimeout(ConfigFields.READ_TIME_OUT, TimeUnit.MINUTES)
+                .connectTimeout(ConfigFields.CONNECT_TIME_OUT, TimeUnit.MINUTES)
+                .writeTimeout(ConfigFields.WRITE_TIME_OUT, TimeUnit.MINUTES)
+                .retryOnConnectionFailure(true)
                 //.sslSocketFactory(sslContext.getSocketFactory())//证书配置
-                .addInterceptor(Interceptors.getHeaderInterceptor(baseUrlMap, baseUrl))//添加header拦截器
-                .addInterceptor(new ProgressInterceptor())//添加进度拦截器
-                //.addNetworkInterceptor(Interceptors.getLogInterceptor())//添加日志拦截器,大文件下载会产生OOM
-                .cookieJar(new MyCookieJar())//添加cookie的处理
+                .addInterceptor(Interceptors.getHeaderInterceptor(baseUrlMap, baseUrl))
+                .addInterceptor(new ProgressInterceptor())
+                //.addNetworkInterceptor(Interceptors.getLogInterceptor())
+                .cookieJar(MyCookieJar.getInstance())//添加cookie的处理
                 .build();
         // 初始化Retrofit
         retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)// Baseurl 必须以/结尾
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())// 添加json转换器
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//添加rxJava
                 .client(okClient)
                 .build();
     }
 
-    public static RetrofitTools getInstance(String baseUrl, Map<String, String> baseUrlMap) {
+    public static RetrofitTool getInstance(String baseUrl, Map<String, String> baseUrlMap) {
         if (mInstance == null) {
-            synchronized (RetrofitTools.class) {
+            synchronized (RetrofitTool.class) {
                 if (mInstance == null) {
-                    mInstance = new RetrofitTools(baseUrl, baseUrlMap);
+                    mInstance = new RetrofitTool(baseUrl, baseUrlMap);
                 }
             }
         }

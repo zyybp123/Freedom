@@ -54,7 +54,7 @@ public class GlideManager extends AppGlideModule {
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         //组件注册
-        // OkHttpClient client = RetrofitTools.getInstance(ServerHost.BASE_URL_BOOK).getOkClient();
+        // OkHttpClient client = RetrofitTool.getInstance(ServerHost.BASE_URL_BOOK).getOkClient();
         //注册ok http 进度监听
         //registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(client));
     }
