@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,10 +33,12 @@ import android.widget.ScrollView;
  */
 public class DragPointView extends android.support.v7.widget.AppCompatTextView {
     private boolean initBgFlag;
-    private OnDragListencer dragListencer;
+    private OnDragListener dragListener;
     private int backgroundColor = Color.parseColor("#f43530");
     private PointView pointView;
-    private int x, y, r;
+    private int x;
+    private int y;
+    private int r;
     private ViewGroup scrollParent;
     private int[] p = new int[2];
 
@@ -79,12 +82,12 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
         return bg;
     }
 
-    public OnDragListencer getDragListencer() {
-        return dragListencer;
+    public OnDragListener getDragListener() {
+        return dragListener;
     }
 
-    public void setDragListencer(OnDragListencer dragListencer) {
-        this.dragListencer = dragListencer;
+    public void setDragListener(OnDragListener dragListener) {
+        this.dragListener = dragListener;
     }
 
     public int getBackgroundColor() {
@@ -158,6 +161,7 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
         return true;
     }
 
+    @Nullable
     private ViewGroup getScrollParent() {
         View p = this;
         while (true) {
@@ -176,7 +180,7 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
         }
     }
 
-    public interface OnDragListencer {
+    public interface OnDragListener {
         void onDragOut();
     }
 
@@ -235,7 +239,7 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
                 canvas.drawCircle(c2.x + dr, c2.y + dr, c2.r / (brokenProgress + 2), paint);
             } else {
                 // 绘制手指跟踪的圆形
-                if (catchBitmap == null || (catchBitmap != null && catchBitmap.isRecycled())) {
+                if (catchBitmap == null || catchBitmap.isRecycled()) {
                     return;
                 }
                 canvas.drawBitmap(catchBitmap, c2.x - c2.r, c2.y - c2.r, paint);
@@ -324,8 +328,8 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
                 }
             });
             a.start();
-            if (dragListencer != null) {
-                dragListencer.onDragOut();
+            if (dragListener != null) {
+                dragListener.onDragOut();
             }
         }
 
@@ -334,17 +338,16 @@ public class DragPointView extends android.support.v7.widget.AppCompatTextView {
             float y;
             float r;
 
-            public Circle(float x, float y, float r) {
+            Circle(float x, float y, float r) {
                 this.x = x;
                 this.y = y;
                 this.r = r;
             }
 
-            public double getDistance(Circle c) {
+            double getDistance(Circle c) {
                 float deltaX = x - c.x;
                 float deltaY = y - c.y;
-                double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-                return distance;
+                return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             }
         }
 

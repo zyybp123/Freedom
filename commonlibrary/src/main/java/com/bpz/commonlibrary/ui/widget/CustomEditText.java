@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.bpz.commonlibrary.R;
 
+import org.jetbrains.annotations.NotNull;
+
 
 /**
  * Created by Administrator on 2018/1/11.
@@ -91,7 +93,7 @@ public class CustomEditText extends LinearLayout {
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attrs) {
+    private void init(@NotNull Context context, AttributeSet attrs) {
         //获取自定义属性
         TypedArray typeArray = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.CustomEditText, 0, 0);

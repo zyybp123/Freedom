@@ -11,6 +11,8 @@ import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.entity.StrokeEntity;
 import com.bpz.commonlibrary.util.BgResUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Administrator on 2018/5/7.
  * 自定义的textView,改的是背景图片
@@ -49,7 +51,7 @@ public class PTextView extends AppCompatTextView {
         initAttr(context, attrs);
     }
 
-    private void initAttr(Context context, AttributeSet attrs) {
+    private void initAttr(@NotNull Context context, AttributeSet attrs) {
         TypedArray typeArray = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.PTextView, 0, 0);
         colorStateList = typeArray.getColorStateList(R.styleable.PTextView_pColor);
