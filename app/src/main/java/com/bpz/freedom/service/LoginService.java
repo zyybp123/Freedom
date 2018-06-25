@@ -1,5 +1,7 @@
 package com.bpz.freedom.service;
 
+import com.bpz.freedom.entity.ResultEntity;
+import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.interf.ParamNames;
 
 import io.reactivex.Observable;
@@ -13,8 +15,8 @@ public interface LoginService {
 
     @FormUrlEncoded
     @POST(LOGIN_PATH)
-    Observable doLogin(@Field(ParamNames.ACCOUNT_NAME) String accountName,
-                       @Field(ParamNames.PASSWORD) String password);
+    Observable<ResultEntity<LoginInfo>> doLogin(@Field(ParamNames.ACCOUNT_NAME) String accountName,
+                                                @Field(ParamNames.PASSWORD) String password);
 
 
 }
