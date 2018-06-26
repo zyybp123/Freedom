@@ -1,6 +1,7 @@
 package com.bpz.commonlibrary.ui.widget;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.commonlibrary.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,7 @@ public class StateLayout extends FrameLayout {
         tvTips = baseOtherView.findViewById(R.id.fr_tv_tips);
     }
 
+
     public void setListener(OnRetryListener listener) {
         this.listener = listener;
     }
@@ -89,6 +92,34 @@ public class StateLayout extends FrameLayout {
             return this;
         }
         mPages.put(state, view);
+        return this;
+    }
+
+    public StateLayout setTips(String text) {
+        if (tvTips != null) {
+            tvTips.setText(StringUtil.getNotNullStr(text));
+        }
+        return this;
+    }
+
+    public StateLayout setIcons(@DrawableRes int resId) {
+        if (ivState != null) {
+            ivState.setImageResource(resId);
+        }
+        return this;
+    }
+
+    public StateLayout isShowTips(boolean isShow) {
+        if (tvTips != null) {
+            tvTips.setVisibility(isShow ? VISIBLE : GONE);
+        }
+        return this;
+    }
+
+    public StateLayout isShowIcons(boolean isShow) {
+        if (ivState != null) {
+            ivState.setVisibility(isShow ? VISIBLE : GONE);
+        }
         return this;
     }
 

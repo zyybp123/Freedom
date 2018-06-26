@@ -9,6 +9,7 @@ import com.bpz.commonlibrary.ui.bottombar.BottomBar;
 import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
 import com.bpz.freedom.fragment.TestFragment;
+import com.bpz.freedom.fragment.TestFragment2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,7 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
         //fragment生成
         fragmentList = new ArrayList<>();
         //fragmentList.add(Temp.newInstance("1"));
-        fragmentList.add(new TestFragment());
+        fragmentList.add(new TestFragment2());
         //fragmentList.add(new CategoryFragment());
         fragmentList.add(new TestFragment());
         fragmentList.add(new TestFragment());

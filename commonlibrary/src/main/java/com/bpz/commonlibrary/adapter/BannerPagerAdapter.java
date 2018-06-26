@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.adapter.base.BasePagerAdapter;
+import com.bpz.commonlibrary.interf.listener.OnImgShowListener;
 import com.bpz.commonlibrary.ui.banner.PBanner;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
     private static final String TAG = "BannerPagerAdapter";
-    private PBanner.ImgShowListener<T> listener;
+    private OnImgShowListener<T> listener;
     @DrawableRes
     private int defaultEmptyImg = R.drawable.fr_empty;
 
@@ -27,12 +28,12 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
         super(mList);
     }
 
-    public BannerPagerAdapter(List<T> mList, PBanner.ImgShowListener<T> listener) {
+    public BannerPagerAdapter(List<T> mList, OnImgShowListener<T> listener) {
         super(mList);
         this.listener = listener;
     }
 
-    public BannerPagerAdapter(List<T> mList, PBanner.ImgShowListener<T> listener, int defaultEmptyImg) {
+    public BannerPagerAdapter(List<T> mList, OnImgShowListener<T> listener, int defaultEmptyImg) {
         super(mList);
         this.listener = listener;
         this.defaultEmptyImg = defaultEmptyImg;
@@ -50,7 +51,7 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
             imageView.setImageResource(defaultEmptyImg);
         } else {
             if (listener != null) {
-                listener.setImgShow(imageView, data);
+                listener.onImageShow(imageView, data);
             }
         }
         return imageView;

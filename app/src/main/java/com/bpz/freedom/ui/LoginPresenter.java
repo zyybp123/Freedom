@@ -1,51 +1,45 @@
 package com.bpz.freedom.ui;
 
+import android.support.annotation.NonNull;
+
 import com.bpz.commonlibrary.mvp.BasePresenterImpl;
 import com.bpz.commonlibrary.net.RetrofitTool;
-import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.freedom.BaseObserver;
 import com.bpz.freedom.entity.ResultEntity;
 import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.service.LoginService;
 
 import java.util.HashMap;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-
 public class LoginPresenter extends BasePresenterImpl<LoginView> {
+    private LoginService service;
+
     public LoginPresenter() {
-        RetrofitTool retrofitTool = RetrofitTool
-                .getInstance("", new HashMap<String, String>());
-        LoginService service = retrofitTool
+        service = RetrofitTool
+                .getInstance("http://test.xytzq.cn:9199/tzq/", new HashMap<String, String>())
                 .getRetrofit()
                 .create(LoginService.class);
-        service
-                .doLogin("17600108092","a123456")
+    }
+
+
+    public void doLogin(String accountName, String pwd) {
+        service.doLogin(accountName, pwd)
                 .compose(RetrofitTool.<ResultEntity<LoginInfo>>setMainThread())
-                .subscribe(new Observer<ResultEntity<LoginInfo>>() {
+                .subscribe(new BaseObserver<LoginInfo>(mView, LoginService.LOGIN_PATH) {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
+                    public void onFailure(String methodTag, int code, String describe) {
+                        if (mView != null) {
+                            mView.onLoginFailure(code, describe);
+                        }
                     }
 
                     @Override
-                    public void onNext(ResultEntity<LoginInfo> loginInfoResultEntity) {
-                        mView.onLoginSuccess(loginInfoResultEntity.getData());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
+                    public void onSuccess(String methodTag, String result, @NonNull LoginInfo data) {
+                        if (mView != null){
+                            mView.onLoginSuccess(data);
+                        }
                     }
                 });
     }
 
-    public void doLogin(String accountName, String pwd) {
-
-    }
 }

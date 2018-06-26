@@ -1,5 +1,7 @@
 package com.bpz.freedom.entity.tzq;
 
+import com.bpz.commonlibrary.util.StringUtil;
+
 import java.util.List;
 
 public class LoginInfo {
@@ -22,4 +24,68 @@ public class LoginInfo {
     private List<OrgInfo> orglist;
     private int layer;
     private String username;
+
+    public String getAccountid() {
+        return StringUtil.getNotNullStr(accountid);
+    }
+
+    public void setAccountid(String accountid) {
+        this.accountid = accountid;
+    }
+
+    public String getRongyuntoken() {
+        return StringUtil.getNotNullStr(rongyuntoken);
+    }
+
+    public void setRongyuntoken(String rongyuntoken) {
+        this.rongyuntoken = rongyuntoken;
+    }
+
+    public String getXytoken() {
+        return StringUtil.getNotNullStr(xytoken);
+    }
+
+    public void setXytoken(String xytoken) {
+        this.xytoken = xytoken;
+    }
+
+    public int getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(int roleid) {
+        this.roleid = roleid;
+    }
+
+    public String getUserimage() {
+        return StringUtil.getNotNullStr(userimage);
+    }
+
+    public void setUserimage(String userimage) {
+        this.userimage = userimage;
+    }
+
+    public List<OrgInfo> getOrglist() {
+        return orglist;
+    }
+
+    public void setOrglist(List<OrgInfo> orglist) {
+        this.orglist = orglist;
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
+    }
+
+    public String getUsername() {
+        return StringUtil.getNotNullStr(username);
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

@@ -1,5 +1,9 @@
 package com.bpz.freedom.entity;
 
+import android.text.TextUtils;
+
+import com.bpz.commonlibrary.util.StringUtil;
+
 /**
  * 服务器返回数据的通用实体
  *
@@ -20,7 +24,7 @@ public class ResultEntity<T> {
     private String version;
 
     public String getResult() {
-        return result;
+        return StringUtil.getNotNullStr(result);
     }
 
     public void setResult(String result) {
@@ -36,7 +40,7 @@ public class ResultEntity<T> {
     }
 
     public String getDescribe() {
-        return describe;
+        return StringUtil.getNotNullStr(describe);
     }
 
     public void setDescribe(String describe) {
@@ -52,7 +56,7 @@ public class ResultEntity<T> {
     }
 
     public String getVersion() {
-        return version;
+        return StringUtil.getNotNullStr(version);
     }
 
     public void setVersion(String version) {

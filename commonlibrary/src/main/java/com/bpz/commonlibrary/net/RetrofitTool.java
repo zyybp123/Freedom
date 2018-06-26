@@ -43,12 +43,12 @@ public class RetrofitTool {
                 .readTimeout(ConfigFields.READ_TIME_OUT, TimeUnit.MINUTES)
                 .connectTimeout(ConfigFields.CONNECT_TIME_OUT, TimeUnit.MINUTES)
                 .writeTimeout(ConfigFields.WRITE_TIME_OUT, TimeUnit.MINUTES)
-                .retryOnConnectionFailure(true)
+                //.retryOnConnectionFailure(true)
                 //.sslSocketFactory(sslContext.getSocketFactory())//证书配置
                 .addInterceptor(Interceptors.getHeaderInterceptor(baseUrlMap, baseUrl))
                 .addInterceptor(new ProgressInterceptor())
                 //.addNetworkInterceptor(Interceptors.getLogInterceptor())
-                .cookieJar(MyCookieJar.getInstance())//添加cookie的处理
+                //.cookieJar(MyCookieJar.getInstance())//添加cookie的处理
                 .build();
         // 初始化Retrofit
         retrofit = new Retrofit.Builder()
