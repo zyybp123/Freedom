@@ -35,20 +35,22 @@ public class RetrofitTool {
      */
     private static RetrofitTool mInstance = null;
     private OkHttpClient okClient;
+    private OkHttpClient.Builder okBuilder;
     private Retrofit retrofit;
 
-    private RetrofitTool(String baseUrl, Map<String, String> baseUrlMap) {
+    private RetrofitTool(String baseUrl) {
+
         //设置OkHttpClitent;
         okClient = new OkHttpClient.Builder()
                 .readTimeout(ConfigFields.READ_TIME_OUT, TimeUnit.MINUTES)
                 .connectTimeout(ConfigFields.CONNECT_TIME_OUT, TimeUnit.MINUTES)
                 .writeTimeout(ConfigFields.WRITE_TIME_OUT, TimeUnit.MINUTES)
-                //.retryOnConnectionFailure(true)
+                .retryOnConnectionFailure(true)
                 //.sslSocketFactory(sslContext.getSocketFactory())//证书配置
-                .addInterceptor(Interceptors.getHeaderInterceptor(baseUrlMap, baseUrl))
+                .addInterceptor(Interceptors.getHeaderInterceptor(baseUrl))
                 .addInterceptor(new ProgressInterceptor())
                 //.addNetworkInterceptor(Interceptors.getLogInterceptor())
-                //.cookieJar(MyCookieJar.getInstance())//添加cookie的处理
+                .cookieJar(MyCookieJar.getInstance())//添加cookie的处理
                 .build();
         // 初始化Retrofit
         retrofit = new Retrofit.Builder()
@@ -59,11 +61,11 @@ public class RetrofitTool {
                 .build();
     }
 
-    public static RetrofitTool getInstance(String baseUrl, Map<String, String> baseUrlMap) {
+    public static RetrofitTool getInstance(String baseUrl) {
         if (mInstance == null) {
             synchronized (RetrofitTool.class) {
                 if (mInstance == null) {
-                    mInstance = new RetrofitTool(baseUrl, baseUrlMap);
+                    mInstance = new RetrofitTool(baseUrl);
                 }
             }
         }

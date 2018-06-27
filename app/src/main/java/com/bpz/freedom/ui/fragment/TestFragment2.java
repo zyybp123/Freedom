@@ -1,4 +1,4 @@
-package com.bpz.freedom.fragment;
+package com.bpz.freedom.ui.fragment;
 
 import android.graphics.Color;
 import android.widget.TextView;

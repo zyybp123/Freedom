@@ -1,28 +1,20 @@
-package com.bpz.freedom.fragment;
+package com.bpz.freedom.ui.fragment;
 
 import android.app.Fragment;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bpz.commonlibrary.ui.banner.PBanner;
-import com.bpz.commonlibrary.ui.widget.CustomEditText;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ImgUrl;
 import com.bpz.freedom.R;
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class TestFragment extends Fragment {
 

@@ -29,7 +29,7 @@ public class Interceptors {
     }
 
     @NonNull
-    public static Interceptor getHeaderInterceptor(Map<String, String> baseUrlMap, String baseUrl) {
-        return new HeaderInterceptor(baseUrlMap, baseUrl);
+    public static Interceptor getHeaderInterceptor(String baseUrl) {
+        return new HeaderInterceptor(baseUrl);
     }
 }

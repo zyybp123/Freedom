@@ -5,10 +5,17 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.util.SimpleArrayMap;
 
 import com.bpz.commonlibrary.LibApp;
 import com.bpz.commonlibrary.manager.MyActivityManager;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.freedom.net.KaiHost;
+import com.bpz.freedom.net.TzqHost;
+import com.squareup.leakcanary.LeakCanary;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Freedom extends Application {
     /**
@@ -16,6 +23,7 @@ public class Freedom extends Application {
      */
     @SuppressLint("StaticFieldLeak")
     public static Context mContext;
+    public static SimpleArrayMap<String, String> mBaseUrlMap = new SimpleArrayMap<>();
     /**
      * Activity管理器
      */
@@ -24,11 +32,26 @@ public class Freedom extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //初始化
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         mContext = this;
-        LibApp.init(this);
+        //初始化配置各种ServerHost
+        initBaseUrl();
+        //初始化lib
+        LibApp.init(this, mBaseUrlMap);
+        //管理Activity
         mActivityManager = MyActivityManager.getInstance();
         activityLifeManage();
+
+    }
+
+    private void initBaseUrl() {
+        mBaseUrlMap.put(TzqHost.TAG_TZQ, TzqHost.BASE_URL_TZQ);
+        mBaseUrlMap.put(KaiHost.TAG_KAI_SHU, KaiHost.BASE_URL_KAI_SHU_STORY_TEST);
     }
 
     private void activityLifeManage() {
@@ -50,11 +73,6 @@ public class Freedom extends Application {
             }
 
             @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-                LogUtil.e(activity, "onActivitySaveInstanceState");
-            }
-
-            @Override
             public void onActivityResumed(Activity activity) {
                 LogUtil.e(activity, "onActivityResumed");
                 mActivityManager.setTopActivityWeakRef(activity);
@@ -68,6 +86,11 @@ public class Freedom extends Application {
             @Override
             public void onActivityStopped(Activity activity) {
                 LogUtil.e(activity, "onActivityStopped");
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+                LogUtil.e(activity, "onActivitySaveInstanceState");
             }
 
             @Override

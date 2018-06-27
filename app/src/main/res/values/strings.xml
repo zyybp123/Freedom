@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Freedom</string>
+    <string name="please_enter_server_host">请输入主机地址</string>
+    <string name="fr_sure">确定</string>
 </resources>

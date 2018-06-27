@@ -8,8 +8,9 @@ import android.view.View;
 import com.bpz.commonlibrary.ui.bottombar.BottomBar;
 import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
-import com.bpz.freedom.fragment.TestFragment;
-import com.bpz.freedom.fragment.TestFragment2;
+import com.bpz.freedom.ui.fragment.FragmentMine;
+import com.bpz.freedom.ui.fragment.TestFragment;
+import com.bpz.freedom.ui.fragment.TestFragment2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
         //fragmentList.add(new CategoryFragment());
         fragmentList.add(new TestFragment());
         fragmentList.add(new TestFragment());
-        fragmentList.add(new TestFragment());
+        fragmentList.add(new FragmentMine());
         //fragment的数量必须和title的数量保持一致
         List<BottomBarBean> bottomBarBeen = new ArrayList<>();
         //数据填充

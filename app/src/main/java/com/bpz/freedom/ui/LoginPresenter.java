@@ -7,6 +7,7 @@ import com.bpz.commonlibrary.net.RetrofitTool;
 import com.bpz.freedom.BaseObserver;
 import com.bpz.freedom.entity.ResultEntity;
 import com.bpz.freedom.entity.tzq.LoginInfo;
+import com.bpz.freedom.net.TzqHost;
 import com.bpz.freedom.service.LoginService;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class LoginPresenter extends BasePresenterImpl<LoginView> {
 
     public LoginPresenter() {
         service = RetrofitTool
-                .getInstance("http://test.xytzq.cn:9199/tzq/", new HashMap<String, String>())
+                .getInstance(TzqHost.BASE_URL_TZQ)
                 .getRetrofit()
                 .create(LoginService.class);
     }

@@ -2,9 +2,12 @@ package com.bpz.commonlibrary.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
 import com.bpz.commonlibrary.LibApp;
+
+import java.util.Map;
 
 
 /**
@@ -17,62 +20,43 @@ import com.bpz.commonlibrary.LibApp;
  */
 public class SPUtil {
     /**
-     * sp实例
-     */
-    private SharedPreferences mSharedPreferences;
-    /**
-     * 保存的文件名
+     * 默认保存的文件名
      */
     public static final String DEFAULT_SP_NAME = "bpzChangeConfig";
+    /**
+     * 保存sp实例的map
+     */
+    private static final SimpleArrayMap<String, SPUtil> SP_MAP = new SimpleArrayMap<>();
     /**
      * 单例
      */
     private static volatile SPUtil mInstance;
     /**
-     * 保存sp实例的map
+     * sp实例
      */
-    private SimpleArrayMap<String, SharedPreferences> spMap;
+    private SharedPreferences mSharedPreferences;
 
     private SPUtil(String fileName) {
-        spMap = new SimpleArrayMap<>();
-        //传入的文件名为空串，则用默认的文件名
-        if (StringUtil.isSpaceStr(fileName)) {
-            fileName = DEFAULT_SP_NAME;
-        }
-        //根据文件名获取sp实例
-        mSharedPreferences = getMSharedPreferences(fileName);
-        if (mSharedPreferences == null) {
-            //如果拿到的是空值，说明没有创建过,就新建实例并添加至map
-            mSharedPreferences = LibApp.mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
-            spMap.put(fileName, mSharedPreferences);
-        }
+        mSharedPreferences = LibApp.mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
     }
 
     /**
-     * 单例获取
+     * 实例获取
      *
      * @param fileName 文件名
      * @return 返回唯一实例
      */
     public static SPUtil getInstance(String fileName) {
-        if (mInstance == null) {
-            synchronized (SPUtil.class) {
-                if (mInstance == null) {
-                    mInstance = new SPUtil(fileName);
-                }
-            }
+        //传入的文件名为空串，则用默认的文件名
+        if (StringUtil.isSpace(fileName)) {
+            fileName = DEFAULT_SP_NAME;
         }
-        return mInstance;
-    }
-
-    /**
-     * 根据文件名获取sp实例
-     *
-     * @param fileName 文件名
-     * @return 返回sp实例
-     */
-    private SharedPreferences getMSharedPreferences(String fileName) {
-        return spMap.get(fileName);
+        SPUtil spUtil = SP_MAP.get(fileName);
+        if (spUtil == null) {
+            spUtil = new SPUtil(fileName);
+            SP_MAP.put(fileName, spUtil);
+        }
+        return spUtil;
     }
 
     /**
@@ -224,6 +208,60 @@ public class SPUtil {
      */
     public float get(String key, float defValue) {
         return mSharedPreferences.getFloat(key, defValue);
+    }
+
+    /**
+     * 移除数据
+     *
+     * @param key 键
+     */
+    public void removeA(String key) {
+        mSharedPreferences.edit().remove(key).apply();
+    }
+
+    /**
+     * 移除数据
+     *
+     * @param key 键
+     * @return 是否移除成功
+     */
+    public boolean remove(String key) {
+        return mSharedPreferences.edit().remove(key).commit();
+    }
+
+    /**
+     * 清空数据
+     */
+    public void clearA() {
+        mSharedPreferences.edit().clear().apply();
+    }
+
+    /**
+     * 清空数据
+     *
+     * @return 返回是否成功
+     */
+    public boolean clear() {
+        return mSharedPreferences.edit().clear().commit();
+    }
+
+    /**
+     * 获取所有值
+     *
+     * @return 返回键值对的Map
+     */
+    public Map<String, ?> getAll() {
+        return mSharedPreferences.getAll();
+    }
+
+    /**
+     * 判断是否包含此键
+     *
+     * @param key 键
+     * @return Returns true if the preference exists in the preferences,otherwise false.
+     */
+    public boolean contains(String key) {
+        return mSharedPreferences.contains(key);
     }
 
 }
