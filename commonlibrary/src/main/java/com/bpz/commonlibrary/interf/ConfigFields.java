@@ -8,4 +8,12 @@ public interface ConfigFields {
      * cookie 是否持久化
      */
     boolean IS_PERSISTENCE = true;
+    /**
+     * 默认硬盘缓存大小
+     */
+    long DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 100;
+    /**
+     * 默认缓存文件夹名称
+     */
+    String DEFAULT_CACHE_NAME = "/fr_net";
 }

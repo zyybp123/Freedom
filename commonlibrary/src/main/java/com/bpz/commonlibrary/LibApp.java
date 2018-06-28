@@ -10,6 +10,9 @@ import com.bpz.commonlibrary.interf.listener.OnHeaderOptionListener;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * 基础库全局配置入口
+ */
 public class LibApp {
     public static int readTimeOut;
     public static int writeTimeOut;
@@ -18,6 +21,10 @@ public class LibApp {
     @SuppressLint("StaticFieldLeak")
     public static Context mContext;
     public static SimpleArrayMap<String, String> mBaseUrlMap;
+    public static boolean needCache;
+
+
+    private LibApp(){}
 
     public static void init(@NonNull Context context, @NonNull SimpleArrayMap<String, String> baseUrlMap) {
         mContext = context;

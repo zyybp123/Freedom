@@ -49,7 +49,7 @@ public class HeaderInterceptor implements Interceptor {
                 newBaseUrl = HttpUrl.parse(baseUrl);
             } else {
                 //在此处筛选url，并配置独立的header
-
+                LogUtil.e(TAG, "current thread:  " + Thread.currentThread());
                 //不为空值，从map里取值
                 String url = LibApp.mBaseUrlMap.get(headerValue);
                 if (TextUtils.isEmpty(url)) {

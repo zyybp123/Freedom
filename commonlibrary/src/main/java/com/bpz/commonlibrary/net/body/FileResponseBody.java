@@ -76,7 +76,6 @@ public class FileResponseBody extends ResponseBody {
             public long read(@NonNull Buffer sink, long byteCount) throws IOException {
                 long bytesRead = super.read(sink, byteCount);
                 long contentLength = mResponseBody.contentLength();
-                //LogUtil.e("response body", "thread:" + Thread.currentThread());
                 //处理进度的显示
                 totalBytesRead += bytesRead != -1 ? bytesRead : 0;
                 if (mCallback != null) {

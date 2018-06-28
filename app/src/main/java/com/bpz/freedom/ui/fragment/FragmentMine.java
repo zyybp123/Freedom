@@ -45,6 +45,13 @@ public class FragmentMine extends BaseFragment {
                 //SPUtil.getInstance("config").put("aaa", 123);
             }
         });
+
+        new Thread() {
+            @Override
+            public void run() {
+                LogUtil.e(mFragmentTag, "current thread:  " + Thread.currentThread());
+            }
+        }.start();
     }
 
     @Override

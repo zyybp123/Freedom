@@ -11,4 +11,7 @@ public interface SomeFields {
     String TIMEOUT_ERROR = "网络连接超时";
     String NETWORK_ERROR = "网络工作异常";
     String HOST_UNKNOWN_ERROR = "主机解析异常";
+    String FR_CACHE_CONTROL = "frCacheControl";
+    String GET = "GET";
+    String POST = "POST";
 }

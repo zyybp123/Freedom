@@ -39,7 +39,7 @@ public class RetrofitTool {
     private Retrofit retrofit;
 
     private RetrofitTool(String baseUrl) {
-
+        //okBuilder = new OkHttpClient.Builder();
         //设置OkHttpClitent;
         okClient = new OkHttpClient.Builder()
                 .readTimeout(ConfigFields.READ_TIME_OUT, TimeUnit.MINUTES)
