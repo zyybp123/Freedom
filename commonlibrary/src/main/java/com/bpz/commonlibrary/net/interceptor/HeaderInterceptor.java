@@ -50,6 +50,9 @@ public class HeaderInterceptor implements Interceptor {
             } else {
                 //在此处筛选url，并配置独立的header
                 LogUtil.e(TAG, "current thread:  " + Thread.currentThread());
+                if ("NetEase".equals(headerValue)){
+                    builder.addHeader("Cache-Control","max-age=600");
+                }
                 //不为空值，从map里取值
                 String url = LibApp.mBaseUrlMap.get(headerValue);
                 if (TextUtils.isEmpty(url)) {

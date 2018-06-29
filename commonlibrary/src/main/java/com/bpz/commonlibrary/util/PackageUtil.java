@@ -37,6 +37,17 @@ public class PackageUtil {
     }
 
     /**
+     * @return 包名
+     */
+    public static String getPackageName(@NotNull Context context) {
+        PackageInfo info = getPackageInfo(context);
+        if (info == null) {
+            return "bpz";
+        }
+        return info.packageName;
+    }
+
+    /**
      * @return 版本号
      */
     public static int getVersionCode(@NonNull Context context) {

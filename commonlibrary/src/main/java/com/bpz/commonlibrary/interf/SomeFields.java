@@ -14,4 +14,6 @@ public interface SomeFields {
     String FR_CACHE_CONTROL = "frCacheControl";
     String GET = "GET";
     String POST = "POST";
+    String CACHE_CONTROL = "Cache-Control";
+    String FR_CACHE = FR_CACHE_CONTROL + ":" + "true";
 }

@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.bpz.commonlibrary.interf.ConfigFields;
+import com.bpz.commonlibrary.manager.NetCacheManager;
+import com.bpz.commonlibrary.net.interceptor.BaseInterceptor;
+import com.bpz.commonlibrary.net.interceptor.CacheInterceptor;
 import com.bpz.commonlibrary.net.interceptor.Interceptors;
 import com.bpz.commonlibrary.net.interceptor.ProgressInterceptor;
 
@@ -47,10 +50,11 @@ public class RetrofitTool {
                 .writeTimeout(ConfigFields.WRITE_TIME_OUT, TimeUnit.MINUTES)
                 .retryOnConnectionFailure(true)
                 //.sslSocketFactory(sslContext.getSocketFactory())//证书配置
-                .addInterceptor(Interceptors.getHeaderInterceptor(baseUrl))
+                .addInterceptor(new BaseInterceptor(baseUrl))
                 .addInterceptor(new ProgressInterceptor())
                 //.addNetworkInterceptor(Interceptors.getLogInterceptor())
                 .cookieJar(MyCookieJar.getInstance())//添加cookie的处理
+                //.cache(NetCacheManager.getCache(null))
                 .build();
         // 初始化Retrofit
         retrofit = new Retrofit.Builder()

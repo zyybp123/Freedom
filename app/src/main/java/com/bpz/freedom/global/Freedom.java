@@ -11,6 +11,7 @@ import com.bpz.commonlibrary.LibApp;
 import com.bpz.commonlibrary.manager.MyActivityManager;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.net.KaiHost;
+import com.bpz.freedom.net.NetEaseHost;
 import com.bpz.freedom.net.TzqHost;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -51,6 +52,7 @@ public class Freedom extends Application {
 
     private void initBaseUrl() {
         mBaseUrlMap.put(TzqHost.TAG_TZQ, TzqHost.BASE_URL_TZQ);
+        mBaseUrlMap.put(NetEaseHost.TAG_NET_EASE,NetEaseHost.BASE_URL_NET_EASE);
         mBaseUrlMap.put(KaiHost.TAG_KAI_SHU, KaiHost.BASE_URL_KAI_SHU_STORY_TEST);
     }
 

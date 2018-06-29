@@ -9,8 +9,7 @@ import com.bpz.freedom.entity.ResultEntity;
 import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.net.TzqHost;
 import com.bpz.freedom.service.LoginService;
-
-import java.util.HashMap;
+import com.bpz.freedom.ui.view.LoginView;
 
 public class LoginPresenter extends BasePresenterImpl<LoginView> {
     private LoginService service;

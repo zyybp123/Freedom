@@ -16,4 +16,5 @@ public interface ConfigFields {
      * 默认缓存文件夹名称
      */
     String DEFAULT_CACHE_NAME = "/fr_net";
+
 }

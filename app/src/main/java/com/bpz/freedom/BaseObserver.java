@@ -85,7 +85,7 @@ public abstract class BaseObserver<T> implements Observer<ResultEntity<T>> {
             }
             return;
         }
-        LogUtil.e(TAG, "onError: " + e.getMessage());//这里可以打印错误信息
+        LogUtil.e(TAG, "onError: " + e);//这里可以打印错误信息
         try {
             if (e instanceof ConnectException) {
                 msg = SomeFields.CONNECTION_ERROR;

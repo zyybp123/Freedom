@@ -1,5 +1,6 @@
 package com.bpz.freedom.service;
 
+import com.bpz.commonlibrary.interf.SomeFields;
 import com.bpz.freedom.entity.ResultEntity;
 import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.interf.ParamNames;
@@ -13,10 +14,10 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface LoginService {
-    String LOGIN_PATH = "mobile/login/dologin";
+    String LOGIN_PATH = "tzq/mobile/login/dologin";
 
 
-    @Headers(TzqHost.HEADER_TZQ)
+    @Headers({TzqHost.HEADER_TZQ, SomeFields.FR_CACHE})
     @FormUrlEncoded
     @POST(LOGIN_PATH)
     Observable<ResultEntity<LoginInfo>> doLogin(@Field(ParamNames.ACCOUNT_NAME) String accountName,

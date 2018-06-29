@@ -42,13 +42,13 @@ public class FileResponseBody extends ResponseBody {
 
     @Override
     public MediaType contentType() {
-        LogUtil.e(TAG, "type: " + mResponseBody.contentType());
+        //LogUtil.e(TAG, "type: " + mResponseBody.contentType());
         return mResponseBody.contentType();
     }
 
     @Override
     public long contentLength() {
-        LogUtil.e(TAG, "length: " + mResponseBody.contentLength());
+        //LogUtil.e(TAG, "length: " + mResponseBody.contentLength());
         return mResponseBody.contentLength();
     }
 

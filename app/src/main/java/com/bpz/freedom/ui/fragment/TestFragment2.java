@@ -8,8 +8,10 @@ import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.R;
 import com.bpz.freedom.entity.tzq.LoginInfo;
+import com.bpz.freedom.net.NetEaseHost;
+import com.bpz.freedom.presenter.NetEasePresenter;
 import com.bpz.freedom.ui.LoginPresenter;
-import com.bpz.freedom.ui.LoginView;
+import com.bpz.freedom.ui.view.LoginView;
 
 import io.reactivex.disposables.Disposable;
 
@@ -42,6 +44,8 @@ public class TestFragment2 extends BaseFragment implements LoginView {
         presenter.attachView(this);
         presenter.doLogin("17600108092","a123456");
         mStateLayout.showCurrentPage(StateLayout.State.ON_LOADING);
+        NetEasePresenter easePresenter = new NetEasePresenter();
+        easePresenter.preload();
     }
 
     @Override
