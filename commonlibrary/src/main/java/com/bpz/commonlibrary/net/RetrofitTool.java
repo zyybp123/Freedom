@@ -4,10 +4,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
 import com.bpz.commonlibrary.interf.ConfigFields;
-import com.bpz.commonlibrary.manager.NetCacheManager;
 import com.bpz.commonlibrary.net.interceptor.BaseInterceptor;
-import com.bpz.commonlibrary.net.interceptor.CacheInterceptor;
-import com.bpz.commonlibrary.net.interceptor.Interceptors;
 import com.bpz.commonlibrary.net.interceptor.ProgressInterceptor;
 
 

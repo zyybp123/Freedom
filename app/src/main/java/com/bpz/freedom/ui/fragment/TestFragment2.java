@@ -44,8 +44,8 @@ public class TestFragment2 extends BaseFragment implements LoginView {
         presenter.attachView(this);
         presenter.doLogin("17600108092","a123456");
         mStateLayout.showCurrentPage(StateLayout.State.ON_LOADING);
-        NetEasePresenter easePresenter = new NetEasePresenter();
-        easePresenter.preload();
+        //NetEasePresenter easePresenter = new NetEasePresenter();
+        //easePresenter.preload();
     }
 
     @Override

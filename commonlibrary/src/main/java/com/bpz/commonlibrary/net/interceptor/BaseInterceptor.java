@@ -11,6 +11,7 @@ import com.bpz.commonlibrary.interf.listener.OnHeaderOptionListener;
 import com.bpz.commonlibrary.manager.NetCacheManager;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.PackageUtil;
+import com.bpz.commonlibrary.util.StringUtil;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +22,10 @@ import java.util.List;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 基本拦截器
@@ -96,21 +99,26 @@ public class BaseInterceptor implements Interceptor {
             response = chain.proceed(newRequest);
         }
         if (needCache) {
-            makeCache(newUrl, response);
+            response = makeCache(newUrl, response);
         }
         return response;
     }
 
-    private void makeCache(String url, Response response) throws IOException {
-        String cachePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + PackageUtil.getPackageName(LibApp.mContext)
-                + ConfigFields.DEFAULT_CACHE_NAME;
+    private Response makeCache(String url, Response response) throws IOException {
+        if (StringUtil.isSpace(url) || response == null) {
+            return response;
+        }
+        //获取响应体(注意，responseBody只能使用一次，缓存完毕需要重构响应)
+        ResponseBody body = response.body();
+        if (body == null) {
+            return response;
+        }
+        MediaType mediaType = body.contentType();
+        byte[] bytes = body.bytes();
         //缓存响应体到内存和硬盘中
-        NetCacheManager
-                .getInstance(cachePath)
-                .saveInMem(url, new Gson().toJson(response));
-        NetCacheManager
-                .getInstance(cachePath)
-                .saveInDisk(url, response.body());
+        NetCacheManager.getInstance().saveInMem(url, new String(bytes));
+        NetCacheManager.getInstance().saveInDisk(url, bytes);
+        //重构响应结果
+        return response.newBuilder().body(ResponseBody.create(mediaType, bytes)).build();
     }
 }

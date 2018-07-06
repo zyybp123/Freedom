@@ -4,6 +4,7 @@ import android.accounts.NetworkErrorException;
 import android.support.annotation.NonNull;
 
 import com.bpz.commonlibrary.interf.SomeFields;
+import com.bpz.commonlibrary.manager.NetCacheManager;
 import com.bpz.commonlibrary.mvp.BaseView;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.StringUtil;
@@ -20,6 +21,7 @@ public abstract class BaseObserver<T> implements Observer<ResultEntity<T>> {
     private static final String TAG = "BaseObserver";
     private BaseView mView;
     private String methodTag;
+    private boolean cacheError;
 
     public BaseObserver(BaseView mView, String methodTag) {
         this.mView = mView;
@@ -36,7 +38,7 @@ public abstract class BaseObserver<T> implements Observer<ResultEntity<T>> {
     @Override
     public void onNext(ResultEntity<T> tResultEntity) {
         if (tResultEntity != null) {
-            LogUtil.e(TAG, "......response body......" + tResultEntity);
+            LogUtil.e(TAG, "tResultEntity: " + tResultEntity);
             //数据预处理
             String version = tResultEntity.getVersion();
             String result = tResultEntity.getResult();
@@ -79,6 +81,10 @@ public abstract class BaseObserver<T> implements Observer<ResultEntity<T>> {
     @Override
     public void onError(Throwable e) {
         String msg = "...error...";
+        //如果某一个接口允许缓存
+        if (cacheError){
+            NetCacheManager.getInstance().getInMem(methodTag);
+        }
         if (e == null) {
             if (mView != null) {
                 mView.onError(methodTag, msg);

@@ -16,10 +16,12 @@ import com.bpz.commonlibrary.util.StringUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import io.reactivex.internal.schedulers.IoScheduler;
 import okhttp3.Cache;
 import okhttp3.MediaType;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.cache.DiskLruCache;
 import okhttp3.internal.io.FileSystem;
@@ -36,44 +38,31 @@ import okio.Source;
  */
 public class NetCacheManager {
     private static final String TAG = "NetCacheManager";
-    //max cache size 10mb
+    //the maximum number of bytes this cache should use to store，一个key可以对应多少个缓存文件
     private static final int DEFAULT_VALUE_COUNT = 1;
     private static final String DATA_MEDIA_TYPE = "application/json";
     private static volatile NetCacheManager mInstance;
     private DiskLruCache mDiskLruCache;
     private LruCache<String, String> mLruCache;
 
-    private NetCacheManager(String cacheDirPath) {
+    private NetCacheManager() {
         int maxMemory = (int) (Runtime.getRuntime().totalMemory() / 1024);
         int cacheSize = maxMemory / 8;
         //内存缓存
         mLruCache = new LruCache<>(cacheSize);
         //硬盘缓存
-        File cacheDir = makeCacheDir(cacheDirPath);
+        File cacheDir = makeCacheDir();
         mDiskLruCache = DiskLruCache.create(FileSystem.SYSTEM, cacheDir,
                 PackageUtil.getVersionCode(LibApp.mContext), DEFAULT_VALUE_COUNT,
                 ConfigFields.DEFAULT_DISK_CACHE_SIZE);
     }
 
     @NonNull
-    private static File makeCacheDir(String cacheDirPath) {
+    private static File makeCacheDir() {
         File cacheDir;
-        if (StringUtil.isSpace(cacheDirPath)) {
-            //为空串则取默认缓存目录
-            if (SDCardUtil.hasSDCard()) {
-                //有SD卡优先缓存到SD卡
-                cacheDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + PackageUtil.getPackageName(LibApp.mContext)
-                        + ConfigFields.DEFAULT_CACHE_NAME);
-            } else {
-                //没有就缓存到缓存目录里面
-                cacheDir = new File(LibApp.mContext.getCacheDir().getAbsolutePath()
-                        + File.separator + PackageUtil.getPackageName(LibApp.mContext)
-                        + ConfigFields.DEFAULT_CACHE_NAME);
-            }
-        } else {
-            cacheDir = new File(cacheDirPath);
-        }
+            cacheDir = new File(LibApp.mContext.getCacheDir().getAbsolutePath()
+                    + File.separator + PackageUtil.getPackageName(LibApp.mContext)
+                    + ConfigFields.DEFAULT_CACHE_NAME);
         if (!cacheDir.exists() && cacheDir.isDirectory()) {
             //不存在就创建
             boolean mkdirs = cacheDir.mkdirs();
@@ -83,16 +72,16 @@ public class NetCacheManager {
     }
 
     @NonNull
-    public static Cache getCache(String cacheDirPath) {
-        File file = makeCacheDir(cacheDirPath);
+    public static Cache getCache() {
+        File file = makeCacheDir();
         return new Cache(file, ConfigFields.DEFAULT_DISK_CACHE_SIZE);
     }
 
-    public static NetCacheManager getInstance(String cacheDirPath) {
+    public static NetCacheManager getInstance() {
         if (mInstance == null) {
             synchronized (NetCacheManager.class) {
                 if (mInstance == null) {
-                    mInstance = new NetCacheManager(cacheDirPath);
+                    mInstance = new NetCacheManager();
                 }
             }
         }
@@ -127,30 +116,22 @@ public class NetCacheManager {
     /**
      * 缓存到硬盘
      *
-     * @param url  路径
-     * @param body 响应体
+     * @param url   路径
+     * @param bytes 响应体字节文件
      * @throws IOException 抛出对应异常
      */
-    public void saveInDisk(String url, ResponseBody body) throws IOException {
-        if (StringUtil.isSpace(url) || body == null) {
+    public void saveInDisk(String url, byte[] bytes) throws IOException {
+        if (StringUtil.isSpace(url) || bytes == null) {
             //如果url为空或响应体为空，直接返回
-            LogUtil.e(TAG, "url: " + url + ", " + body);
+            LogUtil.e(TAG, "url: " + url + ", " + Arrays.toString(bytes));
             return;
         }
-        MediaType mediaType = body.contentType();
-        LogUtil.e(TAG, "cache start: " + url + ", media type: " + mediaType);
         DiskLruCache.Editor editor = mDiskLruCache.edit(MD5Util.md5(url));
         if (editor != null) {
             Sink sink = editor.newSink(DEFAULT_VALUE_COUNT - 1);
-            BufferedSink buffer = Okio.buffer(sink);
-
-            LogUtil.e(TAG,"buffer: " + buffer);
-            buffer.write(body.bytes());
-            buffer.flush();
-            //Okio.buffer(sink).write(body.bytes());
-            //editor.commit();
+            Okio.buffer(sink).write(bytes).flush();
+            editor.commit();
         }
-        LogUtil.e(TAG, "cache end: " + url);
     }
 
     /**
