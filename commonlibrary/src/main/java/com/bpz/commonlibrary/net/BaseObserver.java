@@ -5,14 +5,15 @@ import io.reactivex.disposables.Disposable;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
-public class BaseObserver<T> implements Observer<Response<T>> {
+public class BaseObserver implements Observer<ResponseBody> {
     @Override
     public void onSubscribe(Disposable d) {
 
     }
 
     @Override
-    public void onNext(Response<T> tResponse) {
+    public void onNext(ResponseBody body) {
+
     }
 
 

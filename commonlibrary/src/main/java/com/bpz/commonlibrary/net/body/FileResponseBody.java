@@ -42,13 +42,11 @@ public class FileResponseBody extends ResponseBody {
 
     @Override
     public MediaType contentType() {
-        //LogUtil.e(TAG, "type: " + mResponseBody.contentType());
         return mResponseBody.contentType();
     }
 
     @Override
     public long contentLength() {
-        //LogUtil.e(TAG, "length: " + mResponseBody.contentLength());
         return mResponseBody.contentLength();
     }
 
@@ -63,7 +61,6 @@ public class FileResponseBody extends ResponseBody {
     /**
      * 回调进度接口
      *
-     * @param source
      * @return Source
      */
     @NonNull

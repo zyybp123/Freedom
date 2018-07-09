@@ -5,6 +5,8 @@ import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 
+import java.io.File;
+
 /**
  * 监听webView的一系列操作
  */
@@ -32,4 +34,5 @@ public interface IWebListener {
     void fullViewAddView(View view);
 
     void hideVideoFullView();
+
 }

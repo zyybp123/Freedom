@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import org.jetbrains.annotations.Contract;
 
+import java.io.File;
+
 import okhttp3.HttpUrl;
 
 /**
@@ -124,7 +126,7 @@ public class StringUtil {
     @NonNull
     private static String getStrOutSthChar(String str, String splitStr) {
         if (StringUtil.isSpace(str) || splitStr == null) {
-            //如果传入字符串为空行或用来分离的串味null，则返回空串
+            //如果传入字符串为空行或用来分离的串为null，则返回空串
             return "";
         }
         //最后一个 对应串 的索引
@@ -141,6 +143,6 @@ public class StringUtil {
      */
     @NonNull
     public static String getFileName(String path) {
-        return getStrOutSthChar(path, "/");
+        return getStrOutSthChar(path, File.separator);
     }
 }

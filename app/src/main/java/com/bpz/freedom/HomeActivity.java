@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebViewFragment;
 
+import com.bpz.commonlibrary.net.web.WebViewFragmentN;
 import com.bpz.commonlibrary.ui.bottombar.BottomBar;
 import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
@@ -55,7 +57,8 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
         //fragmentList.add(Temp.newInstance("1"));
         fragmentList.add(new TestFragment2());
         //fragmentList.add(new CategoryFragment());
-        fragmentList.add(new TestFragment());
+        fragmentList.add(WebViewFragmentN.newInstance("https://www.baidu.com",
+                WebViewFragmentN.URL_ONLY,null,false));
         fragmentList.add(new TestFragment());
         fragmentList.add(new FragmentMine());
         //fragment的数量必须和title的数量保持一致

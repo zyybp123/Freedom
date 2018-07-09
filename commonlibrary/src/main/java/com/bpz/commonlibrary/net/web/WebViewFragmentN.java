@@ -2,6 +2,7 @@ package com.bpz.commonlibrary.net.web;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -9,14 +10,12 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,6 +25,9 @@ import android.widget.TextView;
 import com.bpz.commonlibrary.BuildConfig;
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.entity.HpmFileBean;
+import com.bpz.commonlibrary.entity.ResInfo;
+import com.bpz.commonlibrary.manager.MyNotificationManager;
+import com.bpz.commonlibrary.net.download.MyDownloadListener;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.StringUtil;
 
@@ -38,8 +40,9 @@ import java.util.List;
 /**
  * WebView的封装
  */
-public class WebViewFragmentN extends Fragment implements IWebListener, View.OnClickListener {
-    public static final String WEB_CACHE_DIR = "/tzq/web/cache";
+public class WebViewFragmentN extends Fragment implements IWebListener, View.OnClickListener,
+        MyDownloadListener {
+    public static final String WEB_CACHE_DIR = "/fr/web/cache";
     public static final String PATH_HEADER = "file://";
     public static final String BASE_URL_ASSETS = PATH_HEADER + "/android_asset";
     public static final int URL_ONLY = 0;
@@ -50,7 +53,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     public static final String ABOUT_BLANK = "about:blank";
     public static final String HPM_FILE = "hpmFile";
     private static final String TAG = "WebViewFragmentN";
-    private static final String JS_TAG = "myObj";
+    private static final String JS_TAG = "frAndroid";
     private static final int TEXT_ZOOM = 100;
     private static final int APP_MAX_CACHE_SIZE = 80 * 1024 * 1024;
     private static final String URL = "url";
@@ -89,6 +92,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
      */
     private boolean hasAuth = false;
     //private Bubble<HpmFileBean.MenuParamsBean> bubble = new Bubble<>();
+    private View mRootView;
 
     /**
      * 传入标识和对应内容
@@ -117,7 +121,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fr_web_view_fragment_layout, container, false);
+        mRootView = inflater.inflate(R.layout.fr_web_view_fragment_layout, container, false);
         Bundle arguments = getArguments();
         if (arguments != null) {
             url = StringUtil.getNotNullStr(arguments.getString(URL));
@@ -125,12 +129,14 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
             configBean = arguments.getParcelable(HPM_FILE);
             hasAuth = arguments.getBoolean(HAS_AUTH);
         }
-        return view;
+        return mRootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //视图已经创建完毕
+        manager = MyNotificationManager.getInstance(mActivity);
+        initView();
         initWebView();
         ibtnBack.setOnClickListener(this);
         ibtnClose.setOnClickListener(this);
@@ -162,11 +168,23 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         LogUtil.e(TAG, "urlTag: " + urlTag + ", url: " + url);
     }
 
+    private void initView() {
+        webView = mRootView.findViewById(R.id.fr_web_view);
+        ibtnBack = mRootView.findViewById(R.id.fr_back);
+        ibtnClose = mRootView.findViewById(R.id.fr_close);
+        ibtnMenu = mRootView.findViewById(R.id.fr_menu);
+        pbProgress = mRootView.findViewById(R.id.fr_pb_progress);
+        tvTitle = mRootView.findViewById(R.id.fr_tv_title);
+        llHeader = mRootView.findViewById(R.id.fr_ll_header);
+        videoFullView = mRootView.findViewById(R.id.fr_video_fullView);
+    }
+
     private void initWebView() {
         webView.setInitialScale(1);
         webChromeClient = new WebChromeClientImpl(this, this);
         webView.setWebChromeClient(webChromeClient);
         webView.setWebViewClient(new WebClientImpl(mActivity, this));
+        webView.setDownloadListener(new WebDownloadListener(this));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(BuildConfig.HAS_LOG);
         }
@@ -199,7 +217,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         // 启动应用缓存，设置缓存模式，缓存路径
         webSettings.setAppCacheEnabled(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-        webSettings.setAppCachePath(getContext().getCacheDir().getAbsolutePath()
+        webSettings.setAppCachePath(mActivity.getCacheDir().getAbsolutePath()
                 + WEB_CACHE_DIR);
         //80M缓存，api 18后，系统自动管理。
         webSettings.setAppCacheMaxSize(APP_MAX_CACHE_SIZE);
@@ -306,12 +324,6 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         if (webView != null) {
             webView.onResume();
         }
-    }    @Override
-    public void fullViewAddView(View view) {
-        FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
-        videoFullView = new FrameLayout(mActivity);
-        videoFullView.addView(view);
-        decor.addView(videoFullView);
     }
 
     @Override
@@ -364,33 +376,40 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         }
     }
 
+    MyNotificationManager manager ;
+
     public FrameLayout getVideoFullView() {
         return videoFullView;
     }
 
-
-
+    @Override
+    public void onDownloadStart() {
+        manager.sendNotification(mActivity,"下载中...","..",R.drawable.fr_empty);
+    }
 
     @Override
-    public void onClick(View v) {
-        /*if (v.getId() == R.id.ibtn_back) {
-            //处理回退
-            goBack();
-        } else if (v.getId() == R.id.ibtn_close) {
-            close();
-        }*/
+    public void onDownloadSuccess(ResInfo resInfo) {
+        manager.cancelNotification();
+        LogUtil.e("下载完成..." + resInfo);
     }
 
-    private void close() {
-        //直接退出
-        mActivity.finish();
+    @Override
+    public void onDownloadFail(Throwable e) {
+        manager.cancelNotification();
     }
 
-    public void hideCustomView() {
-        if (webChromeClient != null) {
-            webChromeClient.onHideCustomView();
-            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+    @Override
+    public void onDownloading(int progress) {
+        LogUtil.e(TAG, "progress: " + progress);
+        //manager.updateNotification(progress);
+    }
+
+    @Override
+    public void fullViewAddView(View view) {
+        FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
+        videoFullView = new FrameLayout(mActivity);
+        videoFullView.addView(view);
+        decor.addView(videoFullView);
     }
 
     public boolean goBack() {
@@ -412,6 +431,31 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         }
         return false;
     }
+
+
+    public void hideCustomView() {
+        if (webChromeClient != null) {
+            webChromeClient.onHideCustomView();
+            mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    private void close() {
+        //直接退出
+        mActivity.finish();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.fr_back) {
+            //处理回退
+            goBack();
+        } else if (v.getId() == R.id.fr_close) {
+            close();
+        }
+    }
+
 
     @Override
     public void hideProgressBar() {
@@ -486,7 +530,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         hideProgressBar();
         mPageFinish = true;
         //if (!CheckNetwork.isNetworkConnected(mActivity)) {
-            hideProgressBar();
+        hideProgressBar();
         //}
         addImageClickListener();
     }
@@ -511,4 +555,6 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
             videoFullView.setVisibility(View.GONE);
         }
     }
+
+
 }
