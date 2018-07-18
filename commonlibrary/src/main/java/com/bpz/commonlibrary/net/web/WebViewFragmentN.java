@@ -34,6 +34,7 @@ import com.bpz.commonlibrary.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -73,6 +74,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     ProgressBar pbProgress;
     WebView webView;
     WebChromeClientImpl webChromeClient;
+    MyNotificationManager manager;
     private String url = "";
     private int urlTag;
     private HpmFileBean configBean;
@@ -93,6 +95,11 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     private boolean hasAuth = false;
     //private Bubble<HpmFileBean.MenuParamsBean> bubble = new Bubble<>();
     private View mRootView;
+    private int currentProgress;
+    /**
+     * 下载的url列表
+     */
+    private List<String> downloadUrlList = new ArrayList<>();
 
     /**
      * 传入标识和对应内容
@@ -376,32 +383,35 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         }
     }
 
-    MyNotificationManager manager ;
-
     public FrameLayout getVideoFullView() {
         return videoFullView;
     }
 
     @Override
-    public void onDownloadStart() {
-        manager.sendNotification(mActivity,"下载中...","..",R.drawable.fr_empty);
-    }
-
-    @Override
     public void onDownloadSuccess(ResInfo resInfo) {
-        manager.cancelNotification();
+        //manager.cancelNotification();
+        manager.hideProgress();
         LogUtil.e("下载完成..." + resInfo);
     }
 
     @Override
-    public void onDownloadFail(Throwable e) {
+    public void onDownloadFail(String url, Throwable e) {
         manager.cancelNotification();
     }
 
     @Override
-    public void onDownloading(int progress) {
+    public void onDownloading(String url, final int progress) {
         LogUtil.e(TAG, "progress: " + progress);
-        //manager.updateNotification(progress);
+        if (currentProgress - progress != 0) {
+            manager.updateProgress(progress);
+        }
+        currentProgress = progress;
+    }
+
+    @Override
+    public void onDownloadStart(String url) {
+        downloadUrlList.add(url);
+        manager.sendNotification(mActivity, "下载中...", "..", R.drawable.fr_empty);
     }
 
     @Override

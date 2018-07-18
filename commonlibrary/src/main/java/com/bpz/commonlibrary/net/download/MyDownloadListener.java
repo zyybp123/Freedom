@@ -6,9 +6,9 @@ public interface MyDownloadListener {
 
     void onDownloadSuccess(ResInfo resInfo);
 
-    void onDownloadFail(Throwable e);
+    void onDownloadFail(String url, Throwable e);
 
-    void onDownloading(int progress);
+    void onDownloading(String url, int progress);
 
-    void onDownloadStart();
+    void onDownloadStart(String url);
 }

@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
+import okhttp3.HttpUrl;
+
 
 /**
  * Created by Administrator on 2018/1/30.
@@ -146,6 +148,7 @@ public class ResInfo implements Parcelable {
     }
 
     public String getFullName() {
+
         return StringUtil.getFileName(url);
     }
 

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
+import java.util.Set;
 
 import okhttp3.HttpUrl;
 
@@ -15,6 +16,8 @@ import okhttp3.HttpUrl;
  */
 
 public class StringUtil {
+    public static final String QUESTION_MARK = "?";
+    public static final String POINTER = ".";
     private static final String TAG = "StringUtil";
 
     private StringUtil() {
@@ -113,7 +116,7 @@ public class StringUtil {
      */
     @NonNull
     public static String getFileSuffixName(String path) {
-        return getStrOutSthChar(getFileName(path), ".");
+        return getStrOutSthChar(getFileName(path), POINTER);
     }
 
     /**
@@ -144,5 +147,51 @@ public class StringUtil {
     @NonNull
     public static String getFileName(String path) {
         return getStrOutSthChar(path, File.separator);
+    }
+
+    /**
+     * get请求的url会在后面带参数，移除 ? 后面的参数
+     *
+     * @return 不带参数的url
+     */
+    public static String removeUrlParams(String url) {
+        if (isSpace(url)) {
+            //空串直接返回
+            return url;
+        }
+        if (url.contains(QUESTION_MARK)) {
+            //截取 ? 前面的内容
+            return url.substring(0, url.indexOf(QUESTION_MARK));
+        }
+        //不含 ? ，直接返回
+        return url;
+    }
+
+    /**
+     * 从url 中获取文件名
+     *
+     * @return 返回文件名
+     */
+    public static String findFileName(String url) {
+        if (isSpace(url)) {
+            //空串直接返回
+            return url;
+        }
+
+        HttpUrl parse = HttpUrl.parse(url);
+        if (parse == null) {
+            return url;
+        }
+        //拿到参数名集合
+        Set<String> parameterNames = parse.queryParameterNames();
+        if (parameterNames == null || parameterNames.size() == 0) {
+            return url;
+        }
+        for (String paramName : parameterNames) {
+            if (paramName.equals("filename")){
+               return parse.queryParameter(paramName);
+            }
+        }
+        return url;
     }
 }

@@ -26,6 +26,7 @@ public class DownloadObserver implements Observer<ResponseBody>, ProgressCallbac
     private Disposable disposable;
     private RecyclerView.Adapter mAdapter;
     private int position;
+
     private MyDownloadListener listener;
 
 
@@ -42,14 +43,14 @@ public class DownloadObserver implements Observer<ResponseBody>, ProgressCallbac
 
     @Override
     public void onLoading(long contentLength, long bytesWritten, boolean done) {
-        LogUtil.e(TAG, "progress: " + resInfo.getProgress());
-        if (listener != null){
-            listener.onDownloading(resInfo.getProgress());
+        //LogUtil.e(TAG, "progress: " + resInfo.getProgress());
+        if (listener != null) {
+            listener.onDownloading(resInfo.getUrl(), resInfo.getProgress());
         }
         //把onLoading回调到主线程
-        /*Observable.just(resInfo.getProgress())
+        Observable.just(resInfo.getProgress())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new ProgressObserver());*/
+                .subscribe(new ProgressObserver());
     }
 
     @Override
@@ -116,16 +117,13 @@ public class DownloadObserver implements Observer<ResponseBody>, ProgressCallbac
     }
 
     /**
-     * 下载中
+     * 下载中，回调在主线程
      *
      * @param progress 下载进度
      */
     public void loading(int progress) {
         if (mAdapter != null) {
             mAdapter.notifyItemChanged(position);
-        }
-        if (listener != null) {
-            listener.onDownloading(progress);
         }
     }
 
@@ -143,7 +141,7 @@ public class DownloadObserver implements Observer<ResponseBody>, ProgressCallbac
             mAdapter.notifyItemChanged(position);
         }
         if (listener != null) {
-            listener.onDownloadFail(e);
+            listener.onDownloadFail(resInfo.getUrl(), e);
         }
     }
 

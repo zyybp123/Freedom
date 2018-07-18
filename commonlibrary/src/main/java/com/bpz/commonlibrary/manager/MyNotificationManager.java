@@ -11,6 +11,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.webkit.MimeTypeMap;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.entity.NotifyEntity;
@@ -25,6 +26,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 public class MyNotificationManager {
     public static final int MAX_PROGRESS = 100;
+    public static final int MIN_PROGRESS = 0;
     public static final int NOTIFY_ID = 2;
     public static final String CHANNEL_ID = "FR_DOWNLOAD";
     private static final String FR_CHANNEL_NAME = "FR_CHANNEL_NAME";
@@ -104,7 +106,7 @@ public class MyNotificationManager {
 
         notificationBuilder.setContentTitle(title)
                 .setSmallIcon(iconRes)
-                .setProgress(MAX_PROGRESS, 0, false)
+                .setProgress(MAX_PROGRESS, MIN_PROGRESS, false)
                 .setOngoing(true)
                 .setWhen(System.currentTimeMillis());
         mNotification = notificationBuilder.build();
@@ -112,11 +114,25 @@ public class MyNotificationManager {
         mNotificationManager.notify(NOTIFY_ID, mNotification);
     }
 
-    public void updateNotification(int progress) {
+    /**
+     * 进度更新，要注意通知的发送频率
+     *
+     * @param progress 实时的进度
+     */
+    public void updateProgress(int progress) {
         if (notificationBuilder != null && mNotificationManager != null) {
             //更新进度条
-            notificationBuilder.setProgress(100, progress, false);
-            //再次通知
+            notificationBuilder.setProgress(MAX_PROGRESS, progress, false);
+            notificationBuilder.setContentText(progress + "%");
+            mNotificationManager.notify(NOTIFY_ID, notificationBuilder.build());
+        }
+    }
+
+    public void hideProgress() {
+        if (notificationBuilder != null && mNotificationManager != null) {
+            //移除进度条
+            notificationBuilder.setProgress(MIN_PROGRESS, MIN_PROGRESS, false);
+            notificationBuilder.setContentText("下载完成，点击打开！");
             mNotificationManager.notify(NOTIFY_ID, notificationBuilder.build());
         }
     }
