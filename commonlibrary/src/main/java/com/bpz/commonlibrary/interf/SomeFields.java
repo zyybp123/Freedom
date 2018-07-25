@@ -6,6 +6,8 @@ package com.bpz.commonlibrary.interf;
 public interface SomeFields {
     String URL_FLAG = "frUrlFlag";
     String GLIDE_DISK_CACHE_NAME = "appImageCache";
+    String UTF_8 = "UTF-8";
+    String GBK = "GBK";
 
     String CONNECTION_ERROR = "网络连接异常";
     String TIMEOUT_ERROR = "网络连接超时";

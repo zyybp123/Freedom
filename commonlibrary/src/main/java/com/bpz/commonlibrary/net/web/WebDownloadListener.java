@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Contract;
 
 
 public class WebDownloadListener implements DownloadListener {
-    private static final String WEB_VIEW_DOWNLOAD_PATH = "/tzq/web/downloads";
+    private static final String WEB_VIEW_DOWNLOAD_PATH = "/freedom/web/downloads";
     private static final String TAG = "WebDownloadListener";
     private String webDownloadPath;
     private MyDownloadListener downloadListener;

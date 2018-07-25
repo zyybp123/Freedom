@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import com.bpz.commonlibrary.entity.ResInfo;
 import com.bpz.commonlibrary.manager.MyNotificationManager;
 import com.bpz.commonlibrary.net.download.MyDownloadListener;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.commonlibrary.util.NetworkUtils;
 import com.bpz.commonlibrary.util.StringUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -410,6 +413,10 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
 
     @Override
     public void onDownloadStart(String url) {
+        /*//浏览器下载
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        startActivity(intent);*/
         downloadUrlList.add(url);
         manager.sendNotification(mActivity, "下载中...", "..", R.drawable.fr_empty);
     }
@@ -539,9 +546,10 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         LogUtil.e(TAG, "onPageFinished()");
         hideProgressBar();
         mPageFinish = true;
-        //if (!CheckNetwork.isNetworkConnected(mActivity)) {
-        hideProgressBar();
-        //}
+        if (!NetworkUtils.isConnected()) {
+            //网络未连接，隐藏进度条
+            hideProgressBar();
+        }
         addImageClickListener();
     }
 

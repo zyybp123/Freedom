@@ -4,8 +4,14 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import okhttp3.HttpUrl;
@@ -146,7 +152,8 @@ public class StringUtil {
      */
     @NonNull
     public static String getFileName(String path) {
-        return getStrOutSthChar(path, File.separator);
+        //路径，可以是url(url带参，则去掉参数)，也可以是本地的绝对路径
+        return getStrOutSthChar(removeUrlParams(path), File.separator);
     }
 
     /**
@@ -168,29 +175,79 @@ public class StringUtil {
     }
 
     /**
-     * 从url 中获取文件名
+     * 获取某字符串在另一字符串中出现的次数
+     *
+     * @param strDest 源字符串
+     * @param target  要查找的字符串
+     * @return /如果源字符串和要查找的字符串为空串，则返回-1，否则返回实际出现的次数
+     */
+    public static int getCount(String strDest, String target) {
+        if (StringUtil.isSpace(strDest) || StringUtil.isSpace(target)) {
+            //如果源字符串和要查找的字符串为空串，则返回-1
+            return -1;
+        }
+        //替换所有要查找的串
+        String newStr = strDest.replaceAll(target, "");
+        //返回字符串差值除以目标字符串长度
+        return (strDest.length() - newStr.length()) / target.length();
+    }
+
+    /**
+     * 获取子字符串在主字符串中开始索引集合，集合长度也为出现次数
+     *
+     * @param text   主字符串
+     * @param change 子字符串
+     * @return 返回集合, 集合长度为0，则说明text或change为空或主字符串不包含子字符串
+     */
+    public static List<Integer> getIndexList(String text, String change) {
+        List<Integer> indexList = new ArrayList<>();
+        if (StringUtil.isSpace(text) || StringUtil.isSpace(change)) {
+            LogUtil.e("text or change is empty !");
+            return indexList;
+        }
+        int realIndex = 0;
+        while (true) {
+            int index = text.indexOf(change);
+            if (index == -1) {
+                return indexList;
+            }
+            realIndex = realIndex + index + change.length();
+            indexList.add(realIndex - change.length());
+            text = text.substring(index + change.length(), text.length());
+        }
+    }
+
+    /**
+     * 从url 中获取某参数
+     * "filename"
      *
      * @return 返回文件名
      */
-    public static String findFileName(String url) {
+    public static String findFileName(String url, String paramNameNeed) {
         if (isSpace(url)) {
             //空串直接返回
             return url;
         }
-
-        HttpUrl parse = HttpUrl.parse(url);
-        if (parse == null) {
-            return url;
-        }
-        //拿到参数名集合
-        Set<String> parameterNames = parse.queryParameterNames();
-        if (parameterNames == null || parameterNames.size() == 0) {
-            return url;
-        }
-        for (String paramName : parameterNames) {
-            if (paramName.equals("filename")){
-               return parse.queryParameter(paramName);
+        try {
+            //解码后的url
+            String decodeUrl = URLDecoder.decode(url, "utf-8");
+            HttpUrl parse = HttpUrl.parse(decodeUrl);
+            if (parse == null) {
+                return url;
             }
+            //拿到参数名集合
+            Set<String> parameterNames = parse.queryParameterNames();
+            if (parameterNames == null || parameterNames.size() == 0) {
+                return url;
+            }
+            for (String paramName : parameterNames) {
+                if (paramName.equals(paramNameNeed)) {
+                    //找到改参数名，返回对应的值
+                    return parse.queryParameter(paramName);
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return url;
     }
