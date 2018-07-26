@@ -20,7 +20,7 @@ import com.trello.rxlifecycle2.components.RxFragment;
  * @author ZYY
  */
 
-public abstract class BaseFragment<T> extends RxFragment {
+public abstract class BaseFragment<P> extends RxFragment {
     public String mFragmentTag = this.getClass().getSimpleName();
     /**
      * 屏幕的宽高
@@ -53,7 +53,7 @@ public abstract class BaseFragment<T> extends RxFragment {
     /**
      * 网络请求管理器
      */
-    protected T mPresenter;
+    protected P mPresenter;
 
     /**
      * 空参构造，初始化一些值

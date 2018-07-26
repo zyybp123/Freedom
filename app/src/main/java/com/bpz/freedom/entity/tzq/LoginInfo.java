@@ -14,6 +14,8 @@ public class LoginInfo {
      * "orglist":[],
      * "layer":1,
      * "username":"未命名"},
+     *
+     * http://test.xytzq.cn:9199/tzq/mobile/courselive/task/getProjectStudentTaskList
      */
 
     private String accountid;

@@ -2,63 +2,98 @@ package com.bpz.freedom.ui.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bpz.commonlibrary.ui.fragment.BaseRefreshFragment;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ImgUrl;
 import com.bpz.freedom.R;
+import com.bpz.freedom.adapter.Adapter2Test;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TestFragment extends Fragment {
+import io.reactivex.disposables.Disposable;
 
-    private StateLayout stateLayout;
-
-    @Nullable
+public class TestFragment extends BaseRefreshFragment<Integer> {
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        List<String> mList = new ArrayList<>(Arrays.asList(ImgUrl.IMG_S));
-        stateLayout = (StateLayout) inflater.inflate(R.layout.base_state_layout, null);
-        stateLayout.setListener(new StateLayout.OnRetryListener() {
-            @Override
-            public void onRetry(int state) {
-                LogUtil.e("---retry click---");
-            }
-        });
-
-        return stateLayout;
+    public RecyclerView.Adapter getAdapter() {
+        return new Adapter2Test(R.layout.item_test, mDataList);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        stateLayout.showCurrentPage(StateLayout.State.ON_SUCCESS);
-        /*new Timer().schedule(new TimerTask() {
-            int count = -2;
+    public void initialRequest() {
+        showFooter = true;
+        getRequest();
+    }
 
+    public void getRequest() {
+        new Thread() {
             @Override
             public void run() {
-                count++;
-                if (count >= 5) {
-                    cancel();
+                final ArrayList<Integer> numbers = new ArrayList<>();
+                for (int i = 0; i < 20; i++) {
+                    numbers.add(i);
                 }
-                if (getActivity() != null) {
-                    getActivity()
-                            .runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    stateLayout.showCurrentPage(count);
-                                }
-                            });
+                try {
+                    Thread.sleep(3000);
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getListDataSuccess(numbers);
+                        }
+                    });
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    onError("getList", e.getMessage());
                 }
             }
-        }, 1000, 3000);*/
+        }.start();
+    }
+
+    @Override
+    protected void toLoadMore() {
+        getRequest();
+        if (mCurrentPage >= 3) {
+            hasMore = false;
+        }
+        LogUtil.e(mFragmentTag, "load more....");
+        LogUtil.e(mFragmentTag,"current page is: " + mCurrentPage);
+    }
+
+    @Override
+    protected void toRefresh() {
+        getRequest();
+        LogUtil.e(mFragmentTag, "refresh....");
+    }
+
+
+    @Override
+    public void onSubscribe(String methodTag, Disposable d) {
+
+    }
+
+    @Override
+    public void onError(String methodTag, String describe) {
+
+    }
+
+    @Override
+    public void onEmpty(String methodTag) {
+
+    }
+
+    @Override
+    public void noNet() {
 
     }
 

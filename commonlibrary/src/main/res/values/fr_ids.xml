@@ -11,4 +11,5 @@
     <item name="fr_eye_close" type="drawable" />
     <item name="fr_phone" type="drawable" />
     <item name="fr_close" type="drawable" />
+    <item name="fr_colorPrimary" type="color" />
 </resources>

@@ -17,6 +17,8 @@ import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
+
 public class FragmentMine extends BaseFragment {
 
     EditText etHost;
@@ -38,15 +40,27 @@ public class FragmentMine extends BaseFragment {
         etHost = mRootView.findViewById(R.id.et_host);
         tvSure = mRootView.findViewById(R.id.btn_sure);
         tvTest = mRootView.findViewById(R.id.tv_test);
-        String text = "vafizyyhf你好szyyi你好dofizyyalsdf你zyy好slkdajfiojos你好a你好id" +
-                "jfohd你好你好soifhszyyohfasil你好lkzyyls";
-        String change1 = "你好";
-        String change2 = "zyy";
-        String change3 = "i";
-        SpannableString spannableString2 = SpanUtil.changeColor(text, change1, Color.RED);
-        SpannableString spannableString1 = SpanUtil.changeColor(text, change2, Color.BLUE);
-        SpannableString spannableString = SpanUtil.changeColor(text, change3, Color.CYAN);
-        tvTest.setText(spannableString2);
+        String text = "vafiz12yyhaasf你好sz12yyi你好dofizSLLLLL11yyaaaslsdf你zyy好slkdajfiojos你好a你好id" +
+                "jfohd你好你好soifwsdsshszyyohfasil你好lkzSL12LLLLyylswsdss";
+        String[] changes = new String[]{"你好", "zyy", "i", "ss"};
+        Integer[] colors = new Integer[]{Color.MAGENTA, Color.RED, Color.GREEN};
+        String[] changes1 = new String[]{"LLL"};
+        String[] changes2 = new String[]{"12"};
+        String[] changes3 = new String[]{"aas"};
+        String[] changes4 = new String[]{"wsdss"};
+        SpannableString spannableString3 = SpanUtil.changeColors(
+                new SpannableString(text), Arrays.asList(changes), Arrays.asList(colors)
+                , SpanUtil.COLOR_FOREGROUND);
+        SpannableString underline = SpanUtil.someStyle(spannableString3, Arrays.asList(changes1)
+        ,SpanUtil.STYLE_UNDERLINE);
+        SpannableString strike = SpanUtil.someStyle(underline, Arrays.asList(changes2)
+                , SpanUtil.STYLE_STRIKETHROUGH);
+        SpannableString sub = SpanUtil.someStyle(strike, Arrays.asList(changes3)
+                , SpanUtil.STYLE_SUBSCRIPT);
+        SpannableString sup = SpanUtil.someStyle(sub, Arrays.asList(changes4)
+                , SpanUtil.STYLE_SUPERSCRIPT);
+        tvTest.setText(sup);
+
 
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,21 +1,32 @@
 package com.bpz.commonlibrary.util;
 
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.text.style.LeadingMarginSpan;
+import android.text.style.LineHeightSpan;
+import android.text.style.LocaleSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.ScaleXSpan;
 import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
 import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
 import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 处理TextView的显示
@@ -62,33 +73,189 @@ import java.util.List;
  * Spanned.SPAN_INCLUSIVE_INCLUSIVE(前后都包括)
  */
 public class SpanUtil {
+    public static final int COLOR_FOREGROUND = 0;
+    public static final int STYLE_UNDERLINE = 0;
+    public static final int STYLE_STRIKETHROUGH = 1;
+    public static final int STYLE_SUBSCRIPT = 2;
+    public static final int STYLE_SUPERSCRIPT = 3;
+    public static final int SIZE_RELATIVE = 0;
+
     private static final String TAG = "SpanUtil";
 
     private SpanUtil() {
     }
 
+    public static SpannableString changeColor(@NotNull SpannableString text, String change) {
+        String dest = text.subSequence(0, text.length()).toString();
+
+        LocaleSpan localeSpan = new LocaleSpan(Locale.getDefault());
+        //LineHeightSpan
+        //ImageSpan imageSpan = new ImageSpan();
+        return text;
+    }
+
+    public static SpannableString setImg(@NotNull SpannableString spanString,
+                                         List<String> changes) {
+        return spanString;
+    }
+
     /**
-     * 部分文字改变颜色
+     * 为部分文本设置缩放
      *
-     * @param text   文本
-     * @param change 要变色的文本
+     * @param spanString  格式文本串
+     * @param changes     要设置格式的文本
+     * @param proportions 倍数
+     * @param model       0:相对大小，其它:X方向的缩放
+     * @return 返回设置后的格式文本
      */
-    public static SpannableString changeColor(String text, String change, int color) {
-        SpannableString spanString = new SpannableString(text);
-        List<Integer> indexList = StringUtil.getIndexList(text, change);
-        if (indexList.size() == 0) {
-            //文本内容或要更改样式的内容为空或文本不包含要变化的文本，直接返回
+    public static SpannableString somScale(@NotNull SpannableString spanString,
+                                           List<String> changes, List<Float> proportions,
+                                           int model) {
+        String text = spanString.subSequence(0, spanString.length()).toString();
+        if (StringUtil.isSpace(text) || changes == null || changes.size() == 0) {
             return spanString;
-        } else {
-            for (int i = 0; i < indexList.size(); i++) {
-                ForegroundColorSpan colorSpan = new ForegroundColorSpan(color);
-                int start = indexList.get(i);
-                int end = start + change.length();
-                spanString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        int changesSize = changes.size();
+        int colorsSize = proportions.size();
+        //取文本集合做循环
+        for (int i = 0; i < changesSize; i++) {
+            Float proportion;
+            String change = changes.get(i);
+            if (colorsSize >= changesSize) {
+                proportion = proportions.get(i);
+            } else {
+                proportion = proportions.get(i % colorsSize);
+            }
+            List<Integer> indexList = StringUtil.getIndexList(text, change);
+            if (indexList.size() > 0) {
+                for (int j = 0; j < indexList.size(); j++) {
+                    int start = indexList.get(j);
+                    int end = start + change.length();
+                    Object span;
+                    if (model == SIZE_RELATIVE) {
+                        //相对大小
+                        span = new RelativeSizeSpan(proportion);
+                    } else {
+                        //X方向的缩放
+                        span = new ScaleXSpan(proportion);
+                    }
+                    spanString.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
         }
         return spanString;
     }
 
 
+    /**
+     * 为部文字设置下划线,删除线，下标，上标，
+     *
+     * @param spanString 格式文本串
+     * @param changes    要设置格式的文本
+     * @param model      0:下划线，1:删除线，2:下标，3:上标
+     * @return 返回设置后的格式文本
+     */
+    public static SpannableString someStyle(@NotNull SpannableString spanString,
+                                            List<String> changes, int model) {
+        String text = spanString.subSequence(0, spanString.length()).toString();
+        if (StringUtil.isSpace(text) || changes == null || changes.size() == 0) {
+            return spanString;
+        }
+        for (int i = 0; i < changes.size(); i++) {
+            String change = changes.get(i);
+            List<Integer> indexList = StringUtil.getIndexList(text, change);
+            if (indexList.size() > 0) {
+                for (int j = 0; j < indexList.size(); j++) {
+                    Object span;
+                    switch (model) {
+                        case STYLE_UNDERLINE:
+                            span = new UnderlineSpan();
+                            break;
+                        case STYLE_STRIKETHROUGH:
+                            span = new StrikethroughSpan();
+                            break;
+                        case STYLE_SUBSCRIPT:
+                            span = new SubscriptSpan();
+                            break;
+                        case STYLE_SUPERSCRIPT:
+                            span = new SuperscriptSpan();
+                            break;
+                        default:
+                            span = new UnderlineSpan();
+                            break;
+                    }
+                    int start = indexList.get(j);
+                    int end = start + change.length();
+                    spanString.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+        return spanString;
+    }
+
+
+    /**
+     * 部分字符设置颜色
+     *
+     * @param spanString 格式化文本
+     * @param changes    要变色的文本集合
+     * @param colors     颜色集合
+     * @param model      模式，0为前景色，其它为背景色
+     * @return 返回修改后的文本
+     */
+    public static SpannableString changeColors(@NotNull SpannableString spanString,
+                                               List<String> changes,
+                                               List<Integer> colors, int model) {
+        String text = spanString.subSequence(0, spanString.length()).toString();
+        if (StringUtil.isSpace(text) || changes == null || changes.size() == 0
+                || colors == null || colors.size() == 0) {
+            return spanString;
+        }
+        int changesSize = changes.size();
+        int colorsSize = colors.size();
+        //取文本集合做循环
+        for (int i = 0; i < changesSize; i++) {
+            Integer color;
+            String change = changes.get(i);
+            if (colorsSize >= changesSize) {
+                //颜色集合大于等于文本集合，顺次取
+                color = colors.get(i);
+            } else {
+                //颜色集小于文本集合，循环取
+                color = colors.get(i % colorsSize);
+            }
+            changeColor(spanString, model, color, change);
+        }
+        return spanString;
+    }
+
+    /**
+     * 为某些字符设置颜色
+     *
+     * @param spanString 格式文本串
+     * @param model      模式
+     * @param color      颜色
+     * @param change     要变色的文本
+     * @return 返回设置好的
+     */
+    public static SpannableString changeColor(@NotNull SpannableString spanString, int model, Integer color, String change) {
+        String text = spanString.subSequence(0, spanString.length()).toString();
+        List<Integer> indexList = StringUtil.getIndexList(text, change);
+        if (indexList.size() > 0) {
+            for (int j = 0; j < indexList.size(); j++) {
+                int start = indexList.get(j);
+                int end = start + change.length();
+                Object colorSpan;
+                if (model == COLOR_FOREGROUND) {
+                    //前景
+                    colorSpan = new ForegroundColorSpan(color);
+                } else {
+                    //背景
+                    colorSpan = new BackgroundColorSpan(color);
+                }
+                spanString.setSpan(colorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return spanString;
+    }
 }
