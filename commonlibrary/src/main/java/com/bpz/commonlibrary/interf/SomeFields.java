@@ -17,5 +17,19 @@ public interface SomeFields {
     String GET = "GET";
     String POST = "POST";
     String CACHE_CONTROL = "Cache-Control";
+    String CONTENT_DISPOSITION = "Content-Disposition";
     String FR_CACHE = FR_CACHE_CONTROL + ":" + "true";
+
+    //常用软件的SD卡下载路径
+    String BROWSER_DOWNLOAD = "/Download";
+    //QQ接收的文件
+    String QQ_FILE_RECEIVE = "/tencent/QQfile_recv";
+    //WX接收的文件
+    String TENCENT_DOWNLOAD = "/tencent/MicroMsg/Download";
+    String WX_FILE ="/tencent/MicroMsg/WeiXin";
+    //百度云下载的文件
+    String BD_FILE = "/BaiduNetdisk";
+    //UC浏览器下载文件
+    String UC_FILE = "/UCDownloads";
+
 }

@@ -28,15 +28,17 @@ public class FileResponseBody extends ResponseBody {
     private ResponseBody mResponseBody;
     private ProgressCallback mCallback;
     private BufferedSource mBufferedSource;
+    private String contentDisposition;
     /**
      * 请求的路径
      */
     private String url;
 
-    public FileResponseBody(String url, ResponseBody responseBody) {
+    public FileResponseBody(String url, ResponseBody responseBody,String contentDisposition) {
         super();
         this.mResponseBody = responseBody;
         this.url = url;
+        this.contentDisposition = contentDisposition;
         this.mCallback = ProgressManager.LISTENER_MAP.get(url);
     }
 

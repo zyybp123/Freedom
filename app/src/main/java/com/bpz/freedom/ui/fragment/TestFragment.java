@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bpz.commonlibrary.mvp.BasePresenter;
+import com.bpz.commonlibrary.mvp.BaseView;
 import com.bpz.commonlibrary.ui.fragment.BaseRefreshFragment;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
@@ -26,13 +28,18 @@ import io.reactivex.disposables.Disposable;
 public class TestFragment extends BaseRefreshFragment<Integer> {
     @Override
     public RecyclerView.Adapter getAdapter() {
+        showFooter = true;
         return new Adapter2Test(R.layout.item_test, mDataList);
     }
 
     @Override
     public void initialRequest() {
-        showFooter = true;
         getRequest();
+    }
+
+    @Override
+    protected BasePresenter<BaseView> getPresenter() {
+        return null;
     }
 
     public void getRequest() {

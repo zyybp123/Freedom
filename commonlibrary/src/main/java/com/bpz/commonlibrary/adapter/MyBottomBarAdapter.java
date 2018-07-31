@@ -117,30 +117,18 @@ public class MyBottomBarAdapter extends BaseLinearAdapter {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Fragment fragment = bottomBarBeen.get(position).getFragment();
         String title = position + bottomBarBeen.get(position).getTitle();
-        if (fragment.isAdded()) {
-            if (currentFragment != null) {
-                //隐藏之前的Fragment
-                fragmentTransaction.hide(currentFragment);
-            }
-            //如果被点击的Fragment已经添加了,直接显示
-            fragmentTransaction.show(fragment).commit();
-        } else {
-            if (currentFragment != null) {
-                //隐藏之前的Fragment
-                fragmentTransaction.hide(currentFragment);
-            }
-            try {
-                //被点击Fragment还没添加,先添加,后显示
-                fragmentTransaction
-                        .add(R.id.fr_frame_layout_container, fragment, title)
-                        .show(fragment)
-                        .commit();
-            } catch (Exception e) {
-                LogUtil.e(msgTag, "Exception: " + e);
-                //如果抛出异常，说明添加失败，直接展示出来
-                fragmentTransaction.show(fragment).commit();
-            }
+        if (currentFragment != null) {
+            //之前的Fragment不为空，则隐藏
+            fragmentTransaction.hide(currentFragment);
         }
+        if (!fragment.isAdded()){
+            //当前的fragment未添加
+            fragmentManager.beginTransaction().remove(fragment).commit();
+            fragmentTransaction.add(R.id.fr_frame_layout_container, fragment, title);
+        }
+        //已经添加，就显示
+        fragmentTransaction.show(fragment);
+        fragmentTransaction.commitAllowingStateLoss();
         //将选中的Fragment置为当前Fragment
         currentFragment = fragment;
         return fragment;

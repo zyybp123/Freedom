@@ -82,4 +82,5 @@ dependencies {
     api 'com.zhihu.android:matisse:0.5.1-beta1'
     //tab layout
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+
 }

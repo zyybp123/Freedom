@@ -3,6 +3,8 @@ package com.bpz.commonlibrary.util;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Random;
 
 /**
@@ -22,8 +24,10 @@ public class ColorUtil {
      * @param alpha 取值为[0,1]，0表示全透明，1表示不透明
      * @return 返回改变了 alpha 值的颜色值
      */
+    @Contract(pure = true)
     public static int setColorAlpha(@ColorInt int color, float alpha) {
-        return color & 0x00ffffff | (int) (alpha * 255) << 24; // 清掉alpha信息后加上新的alpha信息
+        // 清掉alpha信息后加上新的alpha信息
+        return color & 0x00ffffff | (int) (alpha * 255) << 24;
     }
 
     /**

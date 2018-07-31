@@ -39,13 +39,15 @@ public class WebDownloadListener implements DownloadListener {
     }
 
     @Override
-    public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+    public void onDownloadStart(String url, String userAgent, String contentDisposition,
+                                String mimetype, long contentLength) {
         LogUtil.e(TAG, "start download: " + url);
-        if (downloadListener != null){
+        if (downloadListener != null) {
             downloadListener.onDownloadStart(url);
         }
         //webView监听下载，此处可以实现下载逻辑
         ResInfo resInfo = new ResInfo();
+        resInfo.setContentPosition(contentDisposition);
         resInfo.setUrl(url);
         resInfo.setFileDir(webDownloadPath);
         DownloadManager

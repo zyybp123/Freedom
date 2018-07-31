@@ -3,6 +3,8 @@ package com.bpz.freedom.ui.fragment;
 import android.graphics.Color;
 import android.widget.TextView;
 
+import com.bpz.commonlibrary.mvp.BasePresenter;
+import com.bpz.commonlibrary.mvp.BaseView;
 import com.bpz.commonlibrary.ui.fragment.BaseFragment;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
@@ -15,7 +17,7 @@ import com.bpz.freedom.ui.view.LoginView;
 
 import io.reactivex.disposables.Disposable;
 
-public class TestFragment2 extends BaseFragment implements LoginView {
+public class TestFragment2 extends BaseFragment<LoginPresenter> implements LoginView {
     StateLayout mStateLayout;
     TextView textView;
     LoginPresenter presenter;
@@ -40,13 +42,17 @@ public class TestFragment2 extends BaseFragment implements LoginView {
 
     @Override
     public void initialRequest() {
-        presenter = new LoginPresenter();
-        presenter.attachView(this);
-        presenter.doLogin("17600108092","a123456");
+        mPresenter.doLogin("17600108092","a123456");
         mStateLayout.showCurrentPage(StateLayout.State.ON_LOADING);
         //NetEasePresenter easePresenter = new NetEasePresenter();
         //easePresenter.preload();
     }
+
+    @Override
+    protected LoginPresenter getPresenter() {
+        return new LoginPresenter();
+    }
+
 
     @Override
     public void onDestroyView() {

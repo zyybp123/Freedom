@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.ui.fragment.BaseFragment;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.SPUtil;
@@ -15,9 +16,12 @@ import com.bpz.freedom.R;
 import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
+import com.bpz.freedom.ui.SomeTestActivity;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
+
+import io.reactivex.disposables.Disposable;
 
 public class FragmentMine extends BaseFragment {
 
@@ -61,6 +65,13 @@ public class FragmentMine extends BaseFragment {
                 , SpanUtil.STYLE_SUPERSCRIPT);
         tvTest.setText(sup);
 
+        tvTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SomeTestActivity.startSelf(mActivity);
+            }
+        });
+
 
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +95,36 @@ public class FragmentMine extends BaseFragment {
 
     @Override
     public void initialRequest() {
+
+    }
+
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
+
+    @Override
+    public void onSubscribe(String methodTag, Disposable d) {
+
+    }
+
+    @Override
+    public void onLoading() {
+
+    }
+
+    @Override
+    public void onError(String methodTag, String describe) {
+
+    }
+
+    @Override
+    public void onEmpty(String methodTag) {
+
+    }
+
+    @Override
+    public void noNet() {
 
     }
 }

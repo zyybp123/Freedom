@@ -49,6 +49,9 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     public static final String WEB_CACHE_DIR = "/fr/web/cache";
     public static final String PATH_HEADER = "file://";
     public static final String BASE_URL_ASSETS = PATH_HEADER + "/android_asset";
+    public static final String BASE_URL_RESOURCE = PATH_HEADER + "/android_res";
+    public static final String BASE_URL_POXY = PATH_HEADER + "/cookieless_proxy";
+    public static final String CONTENT_BASE = "content:";
     public static final int URL_ONLY = 0;
     public static final int URL_IN_LOCAL = 1;
     public static final int URL_IN_ASSETS = 2;
@@ -162,7 +165,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
                 loadWebPage(BASE_URL_ASSETS + url);
                 break;
             case URL_IN_LOCAL:
-                //加载本地文件
+                //加载本地文件(传入本地文件的绝对路径)
                 loadWebPage(PATH_HEADER + File.separator + url);
                 break;
             case STR_HTML:
@@ -362,6 +365,9 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
 
     @Override
     public void onDestroyView() {
+        if (manager != null) {
+            manager = null;
+        }
         super.onDestroyView();
     }
 
@@ -393,20 +399,26 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
     @Override
     public void onDownloadSuccess(ResInfo resInfo) {
         //manager.cancelNotification();
-        manager.hideProgress();
-        LogUtil.e("下载完成..." + resInfo);
+        if (manager != null) {
+            manager.hideProgress();
+            LogUtil.e("下载完成..." + resInfo);
+        }
     }
 
     @Override
     public void onDownloadFail(String url, Throwable e) {
-        manager.cancelNotification();
+        if (manager != null) {
+            manager.cancelNotification();
+        }
     }
 
     @Override
     public void onDownloading(String url, final int progress) {
         LogUtil.e(TAG, "progress: " + progress);
         if (currentProgress - progress != 0) {
-            manager.updateProgress(progress);
+            if (manager != null) {
+                manager.updateProgress(progress);
+            }
         }
         currentProgress = progress;
     }
@@ -418,7 +430,9 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         Intent intent = new Intent(Intent.ACTION_VIEW,uri);
         startActivity(intent);*/
         downloadUrlList.add(url);
-        manager.sendNotification(mActivity, "下载中...", "..", R.drawable.fr_empty);
+        if (manager != null) {
+            manager.sendNotification(mActivity, "下载中...", "..", R.drawable.fr_empty);
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.AbsListView;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.mvp.BaseListView;
@@ -49,6 +50,11 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     }
 
     @Override
+    public void initialRequest() {
+        //初始化请求的位置
+    }
+
+    @Override
     public void viewHasBind() {
         mStateLayout = mRootView.findViewById(R.id.fr_state_layout);
         refreshView = View.inflate(mActivity, R.layout.fr_base_refresh_layout, null);
@@ -70,7 +76,11 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
         onLoading();
         //设置下拉刷新，上拉加载更多的监听器
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
-
+        //设置是否自动加载更多
+        mRefreshLayout.setEnableAutoLoadMore(false);
+        //设置不满一屏是否显示上拉加载更多
+        mRefreshLayout.setEnableLoadMoreWhenContentNotFull(false);
+        mRefreshLayout.setEnableLoadMore(showFooter);
     }
 
     /**
@@ -91,25 +101,25 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     }
 
     @Override
-    public void initialRequest() {
-        //初始化请求的位置
-    }
-
-    @Override
     public void getListDataSuccess(List<T> data) {
         showSuccess();
-        if (onRefreshing) {
-            //刷新中，重置集合
-            mDataList.clear();
-            mCurrentPage = 1;
-        }
         mDataList.addAll(data);
         mAdapter.notifyDataSetChanged();
         if (onRefreshing) {
-            mRefreshLayout.finishRefresh(true);
+            LogUtil.e(mFragmentTag, "refresh end");
+            mRefreshLayout.finishRefresh();
             onRefreshing = false;
         }
-        mRefreshLayout.finishLoadMore();
+        if (showFooter) {
+            if (hasMore) {
+                LogUtil.e(mFragmentTag, "load more end");
+                //还有更多数据
+                mRefreshLayout.finishLoadMore();
+            } else {
+                //显示全部加载完成，并不再触发加载更事件
+                mRefreshLayout.finishLoadMoreWithNoMoreData();
+            }
+        }
     }
 
     public void showSuccess() {
@@ -119,24 +129,16 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     }
 
     @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        if (showFooter) {
-            //允许显示加载更多时
-            if (mCurrentPage == 1) {
-                if (!canUp()) {
-                    //当前为第一页，且不可上滑，说明数据不满一屏
-                    mRefreshLayout.setEnableLoadMore(false);
-                } else {
-                    //当前为第一页，可以上滑动
-                    canLoadMore();
-                }
-            } else {
-                //大于第二页
-                canLoadMore();
-            }
-        } else {
-            //禁止上拉加载更多
-            mRefreshLayout.setEnableLoadMore(false);
+    public void refreshFail() {
+        if (mRefreshLayout != null) {
+            mRefreshLayout.finishRefresh(false);
+        }
+    }
+
+    @Override
+    public void loadMoreFail() {
+        if (mRefreshLayout != null) {
+            mRefreshLayout.finishLoadMore(false);
         }
     }
 
@@ -144,16 +146,28 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
      * @return 返回false表示不能向上滚动了, 否则可以上滑
      */
     public boolean canUp() {
-        return mRecyclerView != null && mRecyclerView.canScrollVertically(1);
+        return mRecyclerView != null && !mRecyclerView.canScrollVertically(1);
+    }
+
+    /**
+     * 继续获取数据，子类需要覆盖此方法
+     */
+    public void getMoreOrStop() {
+        LogUtil.e(mFragmentTag, "getMoreOrStop");
+        //默认处理，不加载更多
+        mRefreshLayout.setEnableLoadMore(false);
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        canLoadMore();
     }
 
     public void canLoadMore() {
+        LogUtil.e(mFragmentTag, "canLoadMore currentPage: " + mCurrentPage);
         if (hasMore) {
-            mRefreshLayout.setEnableLoadMore(true);
             mCurrentPage++;
             toLoadMore();
-        } else {
-            mRefreshLayout.setNoMoreData(true);
         }
     }
 
@@ -161,7 +175,12 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        //刷新中，重置集合，当前页数，刷新中的标识，加载更多的标识
         onRefreshing = true;
+        hasMore = true;
+        mCurrentPage = 1;
+        mDataList.clear();
+        mRefreshLayout.setNoMoreData(false);
         toRefresh();
     }
 
@@ -171,7 +190,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
      * @return 返回false表示不能向下滚动了, 否则可以下滑
      */
     public boolean canDown() {
-        return mRecyclerView != null && mRecyclerView.canScrollVertically(-1);
+        return mRecyclerView != null && !mRecyclerView.canScrollVertically(-1);
     }
 
 

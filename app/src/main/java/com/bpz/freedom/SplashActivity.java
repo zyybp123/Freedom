@@ -2,12 +2,15 @@ package com.bpz.freedom;
 
 import android.Manifest;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Timer;
@@ -37,7 +40,8 @@ public class SplashActivity extends AppCompatActivity {
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                startActivity(new Intent(SplashActivity.this,
+                        HomeActivity.class));
             }
         });
         new RxPermissions(this)
@@ -76,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
      */
     public native String stringFromJNI();
 
-    private void timeCal(final TextView tv) {
+    private void timeCal(@NotNull final TextView tv) {
         tv.setEnabled(true);
         new Timer().schedule(new TimerTask() {
             int count;
@@ -90,7 +94,8 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        tv.setText(String.format(Locale.getDefault(), "add%d", count++));
+                        tv.setText(String.format(Locale.getDefault(),
+                                "add%d", count++));
                     }
                 });
             }

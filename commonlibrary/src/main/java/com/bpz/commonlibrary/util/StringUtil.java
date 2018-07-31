@@ -2,6 +2,7 @@ package com.bpz.commonlibrary.util;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.webkit.URLUtil;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +14,10 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import okhttp3.HttpUrl;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2018/1/12.
@@ -24,6 +27,7 @@ import okhttp3.HttpUrl;
 public class StringUtil {
     public static final String QUESTION_MARK = "?";
     public static final String POINTER = ".";
+    public static final String SHARP = "#";
     private static final String TAG = "StringUtil";
 
     private StringUtil() {
@@ -102,19 +106,6 @@ public class StringUtil {
     }
 
     /**
-     * 判断一个字符串是否是一个httpUrl
-     *
-     * @param url 字符串
-     * @return 如果是URL返回true，否则返回false
-     */
-    public static boolean isAHttpUrl(String url) {
-        HttpUrl parse = HttpUrl.parse(url);
-        LogUtil.e(TAG, "httpUrl parse result is --->" + parse);
-        //如果返回的为null则说明其不是一个合法的httpUrl
-        return parse != null;
-    }
-
-    /**
      * 根据路径获取文件的后缀名
      *
      * @param path URL或文件路径
@@ -172,7 +163,74 @@ public class StringUtil {
         }
         //不含 ? ，直接返回
         return url;
+
     }
+
+    /**
+     * 从url里解析文件后缀名
+     * <p>
+     * http://www.aspxfans.com:8080/news/index.asp?boardID=5&ID=24618&page=1#name
+     * scheme：协议部分 http:
+     * 分隔符： //
+     * 域名：www.aspxfans.com
+     * 分隔符： :
+     * 端口： 8080
+     * 路径分隔符：  /
+     * <p>
+     * 从域名后的第一个“/”开始到最后一个“/”为止，是虚拟目录部分。
+     * 虚拟目录也不是一个URL必须的部分。本例中的虚拟目录是“/news/”
+     * <p>
+     * 从域名后的最后一个“/”开始到“？”为止，是文件名部分，
+     * 如果没有“?”,则是从域名后的最后一个“/”开始到“#”为止，是文件部分，
+     * 如果没有“？”和“#”，那么从域名后的最后一个“/”开始到结束，都是文件名部分。
+     * 本例中的文件名是“index.asp”。文件名部分也不是一个URL必须的部分，如果省略该部分，则使用默认的文件名
+     * <p>
+     * 从“#”开始到最后，都是锚部分。本例中的锚部分是“name”。锚部分也不是一个URL必须的部分
+     * <p>
+     * 从“？”开始到“#”为止之间的部分为参数部分，又称搜索部分、查询部分。
+     * 本例中的参数部分为“boardID=5&ID=24618&page=1”。
+     * 参数可以允许有多个参数，参数与参数之间用“&”作为分隔符
+     * <p>
+     * uri
+     * foo://username:password@example.com:8042/over/there/index.dtb?type=animal&name=narwhal#nose
+     * \_/ \________________/ \_________/ \__/\____________________/\____________________/ \__/
+     * |           |              |        |            |                      |            |
+     * scheme   userinfo          host     port         path                  query       fragment
+     * name
+     *
+     * @param url url
+     * @return 返回文件后缀名，如果没有后缀名会返回空串
+     */
+    @NonNull
+    public static String getFileExtensionFromUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            int fragment = url.lastIndexOf(SHARP);
+            //有锚，舍弃锚
+            if (fragment > 0) {
+                url = url.substring(0, fragment);
+            }
+            //有查询参数
+            int query = url.lastIndexOf(QUESTION_MARK);
+            if (query > 0) {
+                url = url.substring(0, query);
+            }
+
+            int filenamePos = url.lastIndexOf(File.separator);
+            String filename =
+                    0 <= filenamePos ? url.substring(filenamePos + 1) : url;
+
+            //处理掉非法字符
+            if (!filename.isEmpty() &&
+                    Pattern.matches("[a-zA-Z_0-9\\.\\-\\(\\)\\%]+", filename)) {
+                int dotPos = filename.lastIndexOf(POINTER);
+                if (0 <= dotPos) {
+                    return filename.substring(dotPos + 1);
+                }
+            }
+        }
+        return "";
+    }
+
 
     /**
      * 获取某字符串在另一字符串中出现的次数
@@ -215,40 +273,5 @@ public class StringUtil {
             indexList.add(realIndex - change.length());
             text = text.substring(index + change.length(), text.length());
         }
-    }
-
-    /**
-     * 从url 中获取某参数
-     * "filename"
-     *
-     * @return 返回文件名
-     */
-    public static String findFileName(String url, String paramNameNeed) {
-        if (isSpace(url)) {
-            //空串直接返回
-            return url;
-        }
-        try {
-            //解码后的url
-            String decodeUrl = URLDecoder.decode(url, "utf-8");
-            HttpUrl parse = HttpUrl.parse(decodeUrl);
-            if (parse == null) {
-                return url;
-            }
-            //拿到参数名集合
-            Set<String> parameterNames = parse.queryParameterNames();
-            if (parameterNames == null || parameterNames.size() == 0) {
-                return url;
-            }
-            for (String paramName : parameterNames) {
-                if (paramName.equals(paramNameNeed)) {
-                    //找到改参数名，返回对应的值
-                    return parse.queryParameter(paramName);
-                }
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return url;
     }
 }

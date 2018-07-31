@@ -3,6 +3,7 @@ package com.bpz.commonlibrary.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.webkit.URLUtil;
 
 import com.bpz.commonlibrary.util.StringUtil;
 
@@ -20,14 +21,11 @@ import okhttp3.HttpUrl;
  */
 public class ResInfo implements Parcelable {
     public static final Creator<ResInfo> CREATOR = new Creator<ResInfo>() {
-        @NonNull
         @Override
         public ResInfo createFromParcel(Parcel source) {
             return new ResInfo(source);
         }
 
-        @NonNull
-        @Contract(pure = true)
         @Override
         public ResInfo[] newArray(int size) {
             return new ResInfo[size];
@@ -86,6 +84,10 @@ public class ResInfo implements Parcelable {
      * 文件最后修改时间
      */
     private long lastModifyTime;
+    /**
+     * 响应头里的描述
+     */
+    private String contentPosition;
 
     public ResInfo() {
     }
@@ -95,7 +97,7 @@ public class ResInfo implements Parcelable {
         this.url = url;
     }
 
-    protected ResInfo(@NotNull Parcel in) {
+    protected ResInfo(Parcel in) {
         this.localId = (Long) in.readValue(Long.class.getClassLoader());
         this.resId = in.readLong();
         this.resName = in.readString();
@@ -109,6 +111,7 @@ public class ResInfo implements Parcelable {
         this.status = in.readInt();
         this.type = in.readString();
         this.lastModifyTime = in.readLong();
+        this.contentPosition = in.readString();
     }
 
     public void setResId(long resId) {
@@ -139,21 +142,36 @@ public class ResInfo implements Parcelable {
         this.resName = resName;
     }
 
-    public String getFileDir() {
-        return StringUtil.getNotNullStr(fileDir);
-    }
-
-    public void setFileDir(String fileDir) {
-        this.fileDir = fileDir;
-    }
-
     public String getFullName() {
-
-        return StringUtil.getFileName(url);
+        return URLUtil.guessFileName(getUrl(), getContentPosition(), getType());
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getContentPosition() {
+        return contentPosition;
+    }
+
+    public void setContentPosition(String contentPosition) {
+        this.contentPosition = contentPosition;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public long getTotalSize() {
@@ -180,16 +198,16 @@ public class ResInfo implements Parcelable {
         this.progress = progress;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getAbsolutePath() {
         return getFileDir() + File.separator + getFullName();
+    }
+
+    public String getFileDir() {
+        return StringUtil.getNotNullStr(fileDir);
+    }
+
+    public void setFileDir(String fileDir) {
+        this.fileDir = fileDir;
     }
 
     public void setAbsolutePath(String absolutePath) {
@@ -202,14 +220,6 @@ public class ResInfo implements Parcelable {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public long getLastModifyTime() {
@@ -240,5 +250,6 @@ public class ResInfo implements Parcelable {
         dest.writeInt(this.status);
         dest.writeString(this.type);
         dest.writeLong(this.lastModifyTime);
+        dest.writeString(this.contentPosition);
     }
 }
