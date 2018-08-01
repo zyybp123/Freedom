@@ -40,6 +40,16 @@ public class FragmentMine extends BaseFragment {
     }
 
     @Override
+    public void initialRequest() {
+
+    }
+
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
+
+    @Override
     public void viewHasBind() {
         etHost = mRootView.findViewById(R.id.et_host);
         tvSure = mRootView.findViewById(R.id.btn_sure);
@@ -56,7 +66,7 @@ public class FragmentMine extends BaseFragment {
                 new SpannableString(text), Arrays.asList(changes), Arrays.asList(colors)
                 , SpanUtil.COLOR_FOREGROUND);
         SpannableString underline = SpanUtil.someStyle(spannableString3, Arrays.asList(changes1)
-        ,SpanUtil.STYLE_UNDERLINE);
+                , SpanUtil.STYLE_UNDERLINE);
         SpannableString strike = SpanUtil.someStyle(underline, Arrays.asList(changes2)
                 , SpanUtil.STYLE_STRIKETHROUGH);
         SpannableString sub = SpanUtil.someStyle(strike, Arrays.asList(changes3)
@@ -85,22 +95,6 @@ public class FragmentMine extends BaseFragment {
             }
         });
 
-        new Thread() {
-            @Override
-            public void run() {
-                LogUtil.e(mFragmentTag, "current thread:  " + Thread.currentThread());
-            }
-        }.start();
-    }
-
-    @Override
-    public void initialRequest() {
-
-    }
-
-    @Override
-    protected BasePresenter getPresenter() {
-        return null;
     }
 
     @Override

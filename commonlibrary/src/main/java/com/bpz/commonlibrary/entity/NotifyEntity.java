@@ -5,10 +5,15 @@ import android.support.annotation.DrawableRes;
 
 import com.bpz.commonlibrary.util.StringUtil;
 
+import org.jetbrains.annotations.Contract;
+
 /**
  * 通知栏配置数据实体
  */
 public class NotifyEntity {
+    private static final String[] GROUP_NAMES = new String[]{
+            "frDefaultMsg", "frActivity", "frTask"
+    };
     private String title;
     @DrawableRes
     private int iconRes;
@@ -29,6 +34,26 @@ public class NotifyEntity {
      * FLAG_CAN_COLORIZE
      */
     private int flags;
+    private int group;
+
+    @Contract(pure = true)
+    public static String getGroupName(int group) {
+        if (group < 0) {
+            group = 0;
+        }
+        if (group >= GROUP_NAMES.length) {
+            group = GROUP_NAMES.length - 1;
+        }
+        return GROUP_NAMES[group];
+    }
+
+    public int getGroup() {
+        return group;
+    }
+
+    public void setGroup(int group) {
+        this.group = group;
+    }
 
     public int getFlags() {
         return flags;

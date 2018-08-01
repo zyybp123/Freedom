@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.bpz.commonlibrary.interf.FileType.IMAGE_LIST;
-import static com.bpz.commonlibrary.interf.FileType.VIDEO_LIST;
 
 
 /**
@@ -44,6 +42,8 @@ public class FileScanUtil {
             .Media.EXTERNAL_CONTENT_URI;
     private static final Uri IMAGE_URI_INTERNAL = MediaStore.Images
             .Media.INTERNAL_CONTENT_URI;
+    private static final String[] IMAGE_LIST = new String[]{};
+    private static final String[] VIDEO_LIST = new String[]{};
 
     /**
      * 搜索指定目录的指定文件

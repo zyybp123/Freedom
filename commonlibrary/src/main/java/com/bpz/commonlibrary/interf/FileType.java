@@ -4,162 +4,75 @@ package com.bpz.commonlibrary.interf;
  * 文件类型的接口
  */
 public interface FileType {
-    /**
-     * 纯文本 .txt
-     */
-    String TEXT_PLAIN = "text/plain";
-
-    /**
-     * PDF文档 .pdf
-     */
+    String EZ = "application/andrew-inset";
+    String TSP = "application/dsptype";
+    String SPL = "application/futuresplash";
+    String HTA = "application/hta";
+    String HQX = "application/mac-binhex40";
+    String CPT = "application/mac-compactpro";
+    String NB = "application/mathematica";
+    String MDB = "application/msaccess";
+    String ODA = "application/oda";
+    String OGG = "application/ogg";
     String PDF = "application/pdf";
+    String KEY = "application/pgp-keys";
+    String PGP = "application/pgp-signature";
+    String PRF = "application/pics-rules";
+    String RAR = "application/rar";
+    String RDF = "application/rdf+xml";
+    String RSS = "application/rss+xml";
+    String ZIP = "application/zip";
+    String APK = "application/vnd.android.package-archive";
+    String CDY = "application/vnd.cinderella";
+    String STL = "application/vnd.ms-pki.stl";
+    String ODB = "application/vnd.oasis.opendocument.database";
+    String ODF = "application/vnd.oasis.opendocument.formula";
+    String ODG = "application/vnd.oasis.opendocument.graphics";
+    String OTG = "application/vnd.oasis.opendocument.graphics-template";
+    String ODI = "application/vnd.oasis.opendocument.image";
+    String ODS = "application/vnd.oasis.opendocument.spreadsheet";
+    String OTS = "application/vnd.oasis.opendocument.spreadsheet-template";
+    String ODT = "application/vnd.oasis.opendocument.text";
+    String ODM = "application/vnd.oasis.opendocument.text-master";
+    String OTT = "application/vnd.oasis.opendocument.text-template";
+    String OTH = "application/vnd.oasis.opendocument.text-web";
+    String KML = "application/vnd.google-earth.kml+xml";
+    String KMZ = "application/vnd.google-earth.kmz";
+    String DOC = "application/msword";//doc,dot
+    String DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    String DOTX = "application/vnd.openxmlformats-officedocument.wordprocessingml.template";
+    String XLS = "application/vnd.ms-excel";//xls,xlt
+    String XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+    String XLTX = "application/vnd.openxmlformats-officedocument.spreadsheetml.template";
+    String PPT = "application/vnd.ms-powerpoint";//ppt,pot,pps
+    String PPTX = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+    String POTX = "application/vnd.openxmlformats-officedocument.presentationml.template";
+    String PPSX = "application/vnd.openxmlformats-officedocument.presentationml.slideshow";
+    String COD = "application/vnd.rim.cod";
+    String MMF = "application/vnd.smaf";
+    String SDC = "application/vnd.stardivision.calc";
+    String SDA = "application/vnd.stardivision.draw";
+    String SDD = "application/vnd.stardivision.impress";//sdd,sdp
+    String SMF = "application/vnd.stardivision.math";
+    String SDW = "application/vnd.stardivision.writer";//sdw,vor
+    String SGL = "application/vnd.stardivision.writer-global";
+    String SXC = "application/vnd.sun.xml.calc";
+    String STC = "application/vnd.sun.xml.calc.template";
+    String SXD = "application/vnd.sun.xml.draw";
+    String STD = "application/vnd.sun.xml.draw.template";
+    String SXI = "application/vnd.sun.xml.impress";
+    String STI = "application/vnd.sun.xml.impress.template";
+    String SXM = "application/vnd.sun.xml.math";
+    String SXW = "application/vnd.sun.xml.writer";
+    String SXG = "application/vnd.sun.xml.writer.global";
+    String STW = "application/vnd.sun.xml.writer.template";
+    String VSD = "application/vnd.visio";
+    String ABW = "application/x-abiword";
+    String DMG = "application/x-apple-diskimage";
+
+
 
     /**
-     * Microsoft Word文件 .doc .docx .dotx
-     */
-    String WORD = "application/msword";
-    String DOC_X = "application/vnd.openxmlformats-officedocument" +
-            ".wordprocessingml.document";
-    String DOT_X = "application/vnd.openxmlformats-officedocument" +
-            ".wordprocessingml.template";
-    /**
-     * Microsoft Excel文件 .xls .xlsx .xltx
-     */
-    String EXCEL = "application/vnd.ms-excel";
-    String XLS_X = "application/vnd.openxmlformats-officedocument" +
-            ".spreadsheetml.sheet";
-    String XLT_X = "application/vnd.openxmlformats-officedocument" +
-            ".spreadsheetml.template";
-    /**
-     * Microsoft PowerPoint文件 .ppt .pptx .potx .ppsx
-     */
-    String PPT = "application/vnd.ms-powerpoint";
-    String PPT_X = "application/vnd.openxmlformats-officedocument" +
-            ".presentationml.presentation";
-    String POT_X = "vnd.openxmlformats-officedocument" +
-            ".presentationml.template";
-    String PPS_X = "vnd.openxmlformats-officedocument" +
-            ".presentationml.slideshow";
-
-    /**
-     * Video .avi .flv .swf .mp4
-     */
-    public static final String AVI = "video/x-msvideo";
-    public static final String FLV = "video/x-flv";
-    public static final String SWF = "application/x-shockwave-flash";
-    public static final String MP4 = "video/mp4";
-
-    /**
-     * Image .jpeg .png .jpg
-     */
-    public static final String JPG = "image/jpeg";
-    public static final String PNG = "image/png";
-
-    /**
-     * （使用HTTP的POST方法提交的表单）
-     */
-    public final static String FORM = "application/x-www-form-urlencoded";
-    /**
-     * （同上，但主要用于表单提交时伴随文件上传的场合）
-     */
-    public final static String FORM_DATA = "multipart/form-data";
-    /**
-     * 所有文件类型集合
-     */
-    public static final String[] ALL_LIST = new String[]{
-            WORD, DOC_X, EXCEL, XLS_X, PPT, PPT_X, PDF, AVI, FLV, SWF, MP4, JPG, PNG
-    };
-    /**
-     * 所有文档文件 Word文档 Excel表格 ppt 和 pdf
-     */
-    public static final String[] DOCUMENT_LIST_ALL = new String[]{
-            WORD, DOC_X, EXCEL, XLS_X, PPT, PPT_X, PDF
-    };
-    /**
-     * 所有视频文件
-     */
-    public static final String[] VIDEO_LIST = new String[]{
-            MP4
-    };
-    /**
-     * 所有图片文件
-     */
-    public static final String[] IMAGE_LIST = new String[]{
-            JPG, PNG
-    };
-
-    /**
-     * dd("application/andrew-inset", "ez");
-     add("application/dsptype", "tsp");
-     add("application/futuresplash", "spl");
-     add("application/hta", "hta");
-     add("application/mac-binhex40", "hqx");
-     add("application/mac-compactpro", "cpt");
-     add("application/mathematica", "nb");
-     add("application/msaccess", "mdb");
-     add("application/oda", "oda");
-     add("application/ogg", "ogg");
-     add("application/pdf", "pdf");
-     add("application/pgp-keys", "key");
-     add("application/pgp-signature", "pgp");
-     add("application/pics-rules", "prf");
-     add("application/rar", "rar");
-     add("application/rdf+xml", "rdf");
-     add("application/rss+xml", "rss");
-     add("application/zip", "zip");
-     add("application/vnd.android.package-archive", "apk");
-     add("application/vnd.cinderella", "cdy");
-     add("application/vnd.ms-pki.stl", "stl");
-     add("application/vnd.oasis.opendocument.database", "odb");
-     add("application/vnd.oasis.opendocument.formula", "odf");
-     add("application/vnd.oasis.opendocument.graphics", "odg");
-     add("application/vnd.oasis.opendocument.graphics-template", "otg");
-     add("application/vnd.oasis.opendocument.image", "odi");
-     add("application/vnd.oasis.opendocument.spreadsheet", "ods");
-     add("application/vnd.oasis.opendocument.spreadsheet-template", "ots");
-     add("application/vnd.oasis.opendocument.text", "odt");
-     add("application/vnd.oasis.opendocument.text-master", "odm");
-     add("application/vnd.oasis.opendocument.text-template", "ott");
-     add("application/vnd.oasis.opendocument.text-web", "oth");
-     add("application/vnd.google-earth.kml+xml", "kml");
-     add("application/vnd.google-earth.kmz", "kmz");
-     add("application/msword", "doc");
-     add("application/msword", "dot");
-     add("application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx");
-     add("application/vnd.openxmlformats-officedocument.wordprocessingml.template", "dotx");
-     add("application/vnd.ms-excel", "xls");
-     add("application/vnd.ms-excel", "xlt");
-     add("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx");
-     add("application/vnd.openxmlformats-officedocument.spreadsheetml.template", "xltx");
-     add("application/vnd.ms-powerpoint", "ppt");
-     add("application/vnd.ms-powerpoint", "pot");
-     add("application/vnd.ms-powerpoint", "pps");
-     add("application/vnd.openxmlformats-officedocument.presentationml.presentation", "pptx");
-     add("application/vnd.openxmlformats-officedocument.presentationml.template", "potx");
-     add("application/vnd.openxmlformats-officedocument.presentationml.slideshow", "ppsx");
-     add("application/vnd.rim.cod", "cod");
-     add("application/vnd.smaf", "mmf");
-     add("application/vnd.stardivision.calc", "sdc");
-     add("application/vnd.stardivision.draw", "sda");
-     add("application/vnd.stardivision.impress", "sdd");
-     add("application/vnd.stardivision.impress", "sdp");
-     add("application/vnd.stardivision.math", "smf");
-     add("application/vnd.stardivision.writer", "sdw");
-     add("application/vnd.stardivision.writer", "vor");
-     add("application/vnd.stardivision.writer-global", "sgl");
-     add("application/vnd.sun.xml.calc", "sxc");
-     add("application/vnd.sun.xml.calc.template", "stc");
-     add("application/vnd.sun.xml.draw", "sxd");
-     add("application/vnd.sun.xml.draw.template", "std");
-     add("application/vnd.sun.xml.impress", "sxi");
-     add("application/vnd.sun.xml.impress.template", "sti");
-     add("application/vnd.sun.xml.math", "sxm");
-     add("application/vnd.sun.xml.writer", "sxw");
-     add("application/vnd.sun.xml.writer.global", "sxg");
-     add("application/vnd.sun.xml.writer.template", "stw");
-     add("application/vnd.visio", "vsd");
-     add("application/x-abiword", "abw");
-     add("application/x-apple-diskimage", "dmg");
      add("application/x-bcpio", "bcpio");
      add("application/x-bittorrent", "torrent");
      add("application/x-cdf", "cdf");

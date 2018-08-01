@@ -1,6 +1,7 @@
 package com.bpz.freedom;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.bpz.commonlibrary.net.web.WebViewFragmentN;
 import com.bpz.commonlibrary.ui.bottombar.BottomBar;
 import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
+import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ui.fragment.FragmentMine;
 import com.bpz.freedom.ui.fragment.TestFragment;
 import com.bpz.freedom.ui.fragment.TestFragment2;
@@ -21,7 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapter.OnSelectedListener {
-
     /**
      * 主页选中图标
      */
@@ -40,9 +41,16 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
             R.drawable.maintab_city_icon,
             R.drawable.maintab_stack_icon
     };
+    private static final String TAG = "HomeActivity";
     @BindView(R.id.bottomBar)
     BottomBar bottomBar;
     List<Fragment> fragmentList;
+    String[] titles;
+    MyBottomBarAdapter adapter;
+    Fragment currentFragment;
+    private String POSITION = "position";
+    private int currentPosition = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +59,30 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
         ButterKnife.bind(this);
 
         //获取主页的title数组
-        String[] titles = getResources().getStringArray(R.array.home_tab_title);
+        titles = getResources().getStringArray(R.array.home_tab_title);
         //fragment生成
         fragmentList = new ArrayList<>();
         //fragmentList.add(Temp.newInstance("1"));
         fragmentList.add(new TestFragment2());
         //fragmentList.add(new CategoryFragment());
         fragmentList.add(WebViewFragmentN.newInstance("https://www.baidu.com",
-                WebViewFragmentN.URL_ONLY,null,false));
+                WebViewFragmentN.URL_ONLY, null, false));
         fragmentList.add(new TestFragment());
         fragmentList.add(new FragmentMine());
+        if (savedInstanceState != null) {
+            //崩溃造成的fragment显示异常处理
+            int cachedId = savedInstanceState.getInt(POSITION, 0);
+            if (cachedId >= 0 && cachedId < fragmentList.size()) {
+                currentPosition = cachedId;
+                LogUtil.e(TAG, "hide current: " + currentPosition);
+                getFragmentManager()
+                        .beginTransaction()
+                        .remove(getFragmentManager().findFragmentByTag(
+                                currentPosition + titles[currentPosition]
+                        ))
+                        .commit();
+            }
+        }
         //fragment的数量必须和title的数量保持一致
         List<BottomBarBean> bottomBarBeen = new ArrayList<>();
         //数据填充
@@ -68,9 +90,8 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
             bottomBarBeen.add(new BottomBarBean(
                     BGS_UN_SELECTED[i], BGS_SELECTED[i], titles[i], i == 0, fragmentList.get(i)));
         }
-
         //设置Adapter
-        MyBottomBarAdapter adapter = new MyBottomBarAdapter(bottomBarBeen,
+        adapter = new MyBottomBarAdapter(bottomBarBeen,
                 getFragmentManager(), this);
         bottomBar.setAdapter(adapter);
         //默认选中第一页
@@ -78,6 +99,13 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(POSITION, currentPosition);
+    }
+
+    @Override
     public void onSelected(View itemView, Fragment currentFragment, BottomBarBean bottomBarBean, int position) {
+        currentPosition = position;
     }
 }

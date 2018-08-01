@@ -1,5 +1,6 @@
 package com.bpz.commonlibrary;
 
+import com.bpz.commonlibrary.util.FileExtensionUtil;
 import com.bpz.commonlibrary.util.SPUtil;
 import com.bpz.commonlibrary.util.SpanUtil;
 import com.bpz.commonlibrary.util.StringUtil;
@@ -20,6 +21,6 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
         //assertEquals(4, 2 + 2);
-
+        FileExtensionUtil.getFileExtensionName();
     }
 }

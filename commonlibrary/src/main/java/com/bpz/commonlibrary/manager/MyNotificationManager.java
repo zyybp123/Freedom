@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Build;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.RequiresApi;
@@ -15,6 +16,7 @@ import android.webkit.MimeTypeMap;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.entity.NotifyEntity;
+import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.StringUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +27,13 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * 通知管理器
  */
 public class MyNotificationManager {
+    private static final String TAG = "MyNotificationManager";
     public static final int MAX_PROGRESS = 100;
     public static final int MIN_PROGRESS = 0;
     public static final int NOTIFY_ID = 2;
     public static final String CHANNEL_ID = "FR_DOWNLOAD";
     private static final String FR_CHANNEL_NAME = "FR_CHANNEL_NAME";
+
     private static volatile MyNotificationManager mInstance;
     private NotificationCompat.Builder notificationBuilder;
     private Notification mNotification;
@@ -50,6 +54,8 @@ public class MyNotificationManager {
         if (mNotificationManager == null) {
             return;
         }
+        NotificationChannelGroup group = new NotificationChannelGroup(channelId, "FreeDom");
+        mNotificationManager.createNotificationChannelGroup(group);
         NotificationChannel chan = new NotificationChannel(channelId,
                 FR_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
         //是否允许振动
@@ -72,12 +78,13 @@ public class MyNotificationManager {
         return mInstance;
     }
 
+
     /**
      * 发送一个默认的通知
      *
      * @param entity 配置该通知的数据实体
      */
-    public void sendDefaultNotification(NotifyEntity entity) {
+    public void sendDefaultNotification(int notifyId, NotifyEntity entity) {
         if (notificationBuilder == null || entity == null || mNotificationManager == null) {
             return;
         }
@@ -85,6 +92,9 @@ public class MyNotificationManager {
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(entity.getTitle())
                 .setContentText(entity.getContentText())
+                //.setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setGroup(NotifyEntity.getGroupName(entity.getGroup()))
+                //.setGroupSummary(true)
                 .setSmallIcon(entity.getIconRes());
         //不为空才设置intent
         PendingIntent intent = entity.getIntent();
@@ -92,10 +102,42 @@ public class MyNotificationManager {
             notificationBuilder.setContentIntent(intent);
         }
         mNotification = notificationBuilder.build();
-        //这句代码的意思是当点击通知跳转到新的activity后，该通知消失
         mNotification.flags = entity.getFlags();
-        mNotificationManager.notify(NOTIFY_ID, mNotification);
+        mNotificationManager.notify(notifyId, mNotification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int number = getNumberOfNotifications();
+            LogUtil.e(TAG,"current number: " + number);
+            //判断是否需要发送分组消息
+            if (number > 1) {
+                //超过一条，要发送分组消息
+                sendGroupMsg(entity);
+            }
+        }
+    }
 
+    /**
+     * 获取当前状态栏具有统一id的通知的数量
+     *
+     * @return 数量
+     */
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private int getNumberOfNotifications() {
+        //查询当前展示的所有通知的状态列表
+        StatusBarNotification[] activeNotifications = mNotificationManager.getActiveNotifications();
+        return activeNotifications.length;
+    }
+
+    public void sendGroupMsg(NotifyEntity entity) {
+        notificationBuilder
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(entity.getTitle())
+                .setContentText(entity.getContentText())
+                //.setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setGroup(NotifyEntity.getGroupName(entity.getGroup()))
+                .setGroupSummary(true)
+                .setSmallIcon(entity.getIconRes());
+        //判断是否要发分组消息
+        mNotificationManager.notify(entity.getGroup() + 1000, notificationBuilder.build());
     }
 
     public void sendNotification(@NotNull Context context, String title,

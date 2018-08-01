@@ -1,6 +1,7 @@
 package com.bpz.freedom.ui;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bpz.commonlibrary.MyMimeType;
+import com.bpz.commonlibrary.entity.NotifyEntity;
+import com.bpz.commonlibrary.manager.MyNotificationManager;
 import com.bpz.commonlibrary.net.Glide4Engine;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.R;
@@ -30,6 +33,7 @@ public class SomeTestActivity extends AppCompatActivity {
     @BindView(R.id.tv_choose)
     TextView tvChoose;
     List<Uri> mSelected;
+    private int notifyId;
 
     public static void startSelf(Activity activity) {
         Intent intent = new Intent(activity, SomeTestActivity.class);
@@ -44,6 +48,17 @@ public class SomeTestActivity extends AppCompatActivity {
         tvChoose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                NotifyEntity entity = new NotifyEntity();
+                entity.setTitle("测试通知！");
+                entity.setIconRes(R.mipmap.ic_launcher);
+                entity.setContentText("跫音不响，三月的春帷不揭，你的心是小小的寂寞的城！");
+                entity.setFlags(Notification.FLAG_AUTO_CANCEL);
+                MyNotificationManager
+                        .getInstance(SomeTestActivity.this)
+                        .sendDefaultNotification(notifyId, entity);
+                notifyId++;
+
                 /*Matisse.from(SomeTestActivity.this)
                         .choose(MimeType.ofAll())
                         .countable(true)
@@ -55,9 +70,20 @@ public class SomeTestActivity extends AppCompatActivity {
                         .thumbnailScale(0.85f)
                         .imageEngine(new Glide4Engine())
                         .forResult(REQUEST_CODE_CHOOSE);*/
-               // MimeType
+                // MimeType
             }
         });
+        /*new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    int a = 100 / 0;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();*/
     }
 
     @Override
