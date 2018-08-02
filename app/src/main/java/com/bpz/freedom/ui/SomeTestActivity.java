@@ -3,26 +3,26 @@ package com.bpz.freedom.ui;
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bpz.commonlibrary.MyMimeType;
+import com.bpz.commonlibrary.adapter.BannerPagerAdapter;
 import com.bpz.commonlibrary.entity.NotifyEntity;
+import com.bpz.commonlibrary.interf.listener.OnImgShowListener;
 import com.bpz.commonlibrary.manager.MyNotificationManager;
-import com.bpz.commonlibrary.net.Glide4Engine;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.bpz.freedom.ImgUrl;
 import com.bpz.freedom.R;
+import com.bumptech.glide.Glide;
 import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.engine.impl.GlideEngine;
-import com.zhihu.matisse.filter.Filter;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +33,9 @@ public class SomeTestActivity extends AppCompatActivity {
     @BindView(R.id.tv_choose)
     TextView tvChoose;
     List<Uri> mSelected;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+    List<String> stringList;
     private int notifyId;
 
     public static void startSelf(Activity activity) {
@@ -84,6 +87,39 @@ public class SomeTestActivity extends AppCompatActivity {
                 }
             }
         }.start();*/
+
+        stringList = Arrays.asList(ImgUrl.IMG_S);
+        final BannerPagerAdapter<String> adapter = new BannerPagerAdapter<>(stringList, new OnImgShowListener<String>() {
+            @Override
+            public void onImageShow(ImageView imageView, String data) {
+                Glide.with(SomeTestActivity.this)
+                        .load(data)
+                        .into(imageView);
+            }
+        });
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(stringList.size() <= 1 ? 0 : getCurrentStart0());
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int realPosition = stringList.size() <= 1 ? position : position % stringList.size();
+                LogUtil.e(TAG, "current position: " + realPosition);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private int getCurrentStart0() {
+        return Integer.MAX_VALUE / 2 / stringList.size() * stringList.size();
     }
 
     @Override

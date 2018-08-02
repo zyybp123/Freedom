@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.adapter.base.BasePagerAdapter;
 import com.bpz.commonlibrary.interf.listener.OnImgShowListener;
+import com.bpz.commonlibrary.interf.listener.OnItemClickListener;
 import com.bpz.commonlibrary.ui.banner.PBanner;
+import com.bpz.commonlibrary.util.LogUtil;
 
 import java.util.List;
 
@@ -33,20 +35,30 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
         this.listener = listener;
     }
 
-    public BannerPagerAdapter(List<T> mList, OnImgShowListener<T> listener, int defaultEmptyImg) {
+    public BannerPagerAdapter(List<T> mList, OnImgShowListener<T> listener,
+                              int defaultEmptyImg, OnItemClickListener<T> clickListener) {
         super(mList);
         this.listener = listener;
         this.defaultEmptyImg = defaultEmptyImg;
     }
 
+    @Override
+    public int getCount() {
+        int count = super.getCount();
+        //总数小于等于1不必循环了
+        return count <= 1 ? count : Integer.MAX_VALUE;
+    }
+
     @NonNull
     @Override
     public View getItemView(ViewGroup container, int position) {
+        LogUtil.e(TAG, "getItemView: " + position);
         ImageView imageView = new ImageView(container.getContext());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        T data = mList.get(position);
+        int realPosition = mList.size() <= 1 ? position : position % mList.size();
+        T data = mList.get(realPosition);
         if (data == null) {
             imageView.setImageResource(defaultEmptyImg);
         } else {

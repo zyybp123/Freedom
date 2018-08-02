@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.GeolocationPermissions;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -435,6 +436,20 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         }
     }
 
+    /**
+     * 文件上传选择回调方法
+     */
+    public void getActivityResult(int requestCode, int resultCode, Intent data) {
+        if (webChromeClient != null) {
+            if (resultCode == WebChromeClientImpl.FILE_CHOOSER_RESULT_CODE_FOR_ANDROID_5) {
+                webChromeClient.mUploadMessageForAndroid5(data, resultCode);
+            } else if (resultCode == WebChromeClientImpl.FILE_CHOOSER_RESULT_CODE) {
+                webChromeClient.mUploadMessage(data, resultCode);
+            }
+
+        }
+    }
+
     @Override
     public void fullViewAddView(View view) {
         FrameLayout decor = (FrameLayout) mActivity.getWindow().getDecorView();
@@ -586,6 +601,11 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         if (videoFullView != null) {
             videoFullView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void locationPermission(String origin, GeolocationPermissions.Callback callback) {
+        //callback.invoke(origin, true, false);
     }
 
 

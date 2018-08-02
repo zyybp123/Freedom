@@ -99,7 +99,7 @@ public class CustomEditText extends LinearLayout {
                 R.styleable.CustomEditText, 0, 0);
         mLeftImgRes = typeArray.getResourceId(R.styleable.CustomEditText_mLeftImgRes, R.drawable.fr_phone);
         mRightImgResFirst = typeArray.getResourceId(R.styleable.CustomEditText_mRightImgResFirst, R.drawable.fr_close);
-        mRightImgResSecond = typeArray.getColor(R.styleable.CustomEditText_mRightImgResSecond, R.drawable.fr_eye_close);
+        mRightImgResSecond = typeArray.getResourceId(R.styleable.CustomEditText_mRightImgResSecond, R.drawable.fr_eye_close);
         mTextColor = typeArray.getColor(R.styleable.CustomEditText_mTextColor, DEFAULT_TEXT_COLOR);
         mDivideLineColor = typeArray.getColor(R.styleable.CustomEditText_mDivideLineColor, DEFAULT_HINT_COLOR);
         mHintColor = typeArray.getColor(R.styleable.CustomEditText_mHintColor, DEFAULT_HINT_COLOR);

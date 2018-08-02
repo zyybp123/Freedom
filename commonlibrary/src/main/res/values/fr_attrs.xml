@@ -46,6 +46,7 @@
         <attr name="mTitleSize" format="dimension" />
         <attr name="mTitleColor" format="color" />
         <attr name="mNumSize" format="dimension" />
+        <attr name="mNumColor" format="color" />
         <attr name="showModel" format="enum">
             <enum name="NONE" value="0" />
             <enum name="ONLY_NUM" value="1" />

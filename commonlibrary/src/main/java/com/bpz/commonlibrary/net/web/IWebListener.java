@@ -2,6 +2,7 @@ package com.bpz.commonlibrary.net.web;
 
 import android.net.http.SslError;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 
@@ -35,4 +36,5 @@ public interface IWebListener {
 
     void hideVideoFullView();
 
+    void locationPermission(String origin, GeolocationPermissions.Callback callback);
 }
