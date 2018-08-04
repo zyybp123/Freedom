@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bpz.commonlibrary.LibApp;
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.adapter.Adapter2Banner;
+import com.bpz.commonlibrary.adapter.BannerIndicatorAdapter;
 import com.bpz.commonlibrary.adapter.BannerPagerAdapter;
 import com.bpz.commonlibrary.interf.listener.BannerData;
 import com.bpz.commonlibrary.interf.listener.OnImgShowListener;
@@ -50,7 +51,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
     @ColorInt
     private int ilColor = Color.argb(126, 0, 0, 0);
     /**
-     * 指示器，宽，高，选中颜色，默认颜色，间距
+     * 指示器，宽，高，选中颜色，默认颜色，间距，圆角
      */
     private float piWidth = 10;
     private float piHeight = 10;
@@ -59,6 +60,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
     @ColorInt
     private int piNormalColor = Color.parseColor("#99000000");
     private float piMargin = 10;
+    private float piRadius = 5;
     /**
      * 标题，数字，大小和颜色
      */
@@ -76,6 +78,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
     /**
      * 指示器的位置
      */
+    private int mLocation = Location.CENTER;
 
     private ViewPager mViewPager;
     private FrameLayout mFLIndicator;
@@ -84,12 +87,13 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
     private LinearContainer mLCIndicator;
     private PeriodicUtil periodicUtil;
     private int currentPage = -1;
-    private List<T> mDataList;
-    private OnImgShowListener<T> imgShowListener;
+    private List<T> mDataList = new ArrayList<>();
     @DrawableRes
     private int defaultEmptyImg = R.drawable.fr_empty;
     private boolean isAutoLoop = true;
     private BannerPagerAdapter<T> mAdapter;
+    private BannerListener<T> bannerListener;
+    private BannerIndicatorAdapter<T> indicatorAdapter;
 
     public PBanner(Context context) {
         this(context, null);
@@ -121,6 +125,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         mNumSize = typeArray.getDimension(R.styleable.PBanner_mNumSize, mNumSize);
         mNumColor = typeArray.getColor(R.styleable.PBanner_mNumColor, mNumColor);
         showModel = typeArray.getInt(R.styleable.PBanner_showModel, Model.NONE);
+        mLocation = typeArray.getInt(R.styleable.PBanner_showModel, Location.CENTER);
         periodicTime = typeArray.getInt(R.styleable.PBanner_periodicTime, periodicTime);
         initView(context);
     }
@@ -135,6 +140,41 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         mAdapter = new BannerPagerAdapter<>(mDataList, this,
                 defaultEmptyImg, this);
         mViewPager.setAdapter(mAdapter);
+        setModel(showModel);
+        setLocation(mLocation);
+        //配置指示器区域的宽高，背景颜色
+        setFLIndicatorSize(ilWidth, ilHeight);
+        setFLIndicatorBackgroundColor(ilColor);
+        //配置指示器的宽高，选中的颜色等
+        setPiSize(piWidth, piHeight, piNormalColor, piSelectedColor, piRadius);
+
+    }
+
+    public void setModel(int model) {
+        if (mFLIndicator == null || mTvTitle == null || mTvNum == null || mLCIndicator == null) {
+            return;
+        }
+        mFLIndicator.setVisibility(VISIBLE);
+        mTvTitle.setVisibility(VISIBLE);
+        mLCIndicator.setVisibility(VISIBLE);
+        mTvNum.setVisibility(VISIBLE);
+        switch (model) {
+            case Model.NONE:
+                mFLIndicator.setVisibility(GONE);
+                break;
+            case Model.ONLY_NUM:
+                mTvTitle.setVisibility(GONE);
+                mLCIndicator.setVisibility(GONE);
+                break;
+            case Model.ONLY_TITLE:
+                mLCIndicator.setVisibility(GONE);
+                mTvNum.setVisibility(GONE);
+                break;
+            case Model.ONLY_INDICATOR:
+                mTvNum.setVisibility(GONE);
+                mTvTitle.setVisibility(GONE);
+                break;
+        }
     }
 
     public void setLocation(int location) {
@@ -164,20 +204,63 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         mLCIndicator.setLayoutParams(params);
     }
 
-    public void setDataList() {
+    public void setFLIndicatorSize(float width, float height) {
+        if (mFLIndicator == null) {
+            return;
+        }
+        ViewGroup.LayoutParams params = mFLIndicator.getLayoutParams();
+        if (params != null) {
+            params.width = (int) width;
+            params.height = (int) height;
+            mFLIndicator.setLayoutParams(params);
+        }
+    }
 
+    public void setFLIndicatorBackgroundColor(@ColorInt int color) {
+        if (mFLIndicator == null) {
+            return;
+        }
+        mFLIndicator.setBackgroundColor(color);
+    }
+
+    public void setPiSize(float piWidth, float piHeight, @ColorInt int piNormalColor,
+                          @ColorInt int piSelectedColor, float piRadius) {
+        if (mLCIndicator != null) {
+            indicatorAdapter = new BannerIndicatorAdapter<>(mDataList,
+                    piWidth, piHeight, piNormalColor, piSelectedColor, piRadius);
+            mLCIndicator.setAdapter(indicatorAdapter);
+        }
+    }
+
+    public void setDataList(List<T> dataList) {
+        if (mAdapter == null || dataList == null || dataList.size() == 0) {
+            return;
+        }
+        mDataList.clear();
+        mDataList.addAll(dataList);
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    public void setBannerListener(BannerListener<T> bannerListener) {
+        this.bannerListener = bannerListener;
     }
 
     @Override
     public void onItemClick(int position, T itemData) {
-        String bannerClickUrl = itemData.getBannerClickUrl();
         //跳转的链接
+        if (bannerListener != null) {
+            bannerListener.onItemClick(position, itemData);
+        }
     }
 
     @Override
     public void onImageShow(ImageView imageView, T data) {
         String bannerImgUrl = data.getBannerImgUrl();
         ImageLoad.glideLoad(LibApp.mContext, bannerImgUrl, imageView);
+        /*if (bannerListener != null) {
+            bannerListener.onImageShow(imageView, data);
+        }*/
     }
 
 
@@ -185,9 +268,9 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         int NONE = 0;
         int ONLY_NUM = 1;
         int ONLY_TITLE = 2;
-        int TITLE_NUM = 3;
-        int ONLY_INDICATOR = 4;
-        int TITLE_INDICATOR = 5;
+        int ONLY_INDICATOR = 3;
+        //int TITLE_NUM = 3;
+        //int TITLE_INDICATOR = 5;
     }
 
     public interface Location {
@@ -196,4 +279,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         int END = 2;
     }
 
+    public interface BannerListener<T> extends OnItemClickListener<T> {
+        //void onImageShow(ImageView imageView, T data);
+    }
 }

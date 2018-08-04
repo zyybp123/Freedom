@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
     private static final String TAG = "BannerPagerAdapter";
+    private OnItemClickListener<T> clickListener;
     private OnImgShowListener<T> listener;
     @DrawableRes
     private int defaultEmptyImg = R.drawable.fr_empty;
@@ -39,6 +40,7 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
                               int defaultEmptyImg, OnItemClickListener<T> clickListener) {
         super(mList);
         this.listener = listener;
+        this.clickListener = clickListener;
         this.defaultEmptyImg = defaultEmptyImg;
     }
 
@@ -51,19 +53,27 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
 
     @NonNull
     @Override
-    public View getItemView(ViewGroup container, int position) {
+    public View getItemView(ViewGroup container, final int position) {
         LogUtil.e(TAG, "getItemView: " + position);
         ImageView imageView = new ImageView(container.getContext());
         imageView.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         int realPosition = mList.size() <= 1 ? position : position % mList.size();
-        T data = mList.get(realPosition);
+        final T data = mList.get(realPosition);
         if (data == null) {
             imageView.setImageResource(defaultEmptyImg);
         } else {
             if (listener != null) {
                 listener.onImageShow(imageView, data);
+            }
+            if (clickListener != null) {
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clickListener.onItemClick(position, data);
+                    }
+                });
             }
         }
         return imageView;

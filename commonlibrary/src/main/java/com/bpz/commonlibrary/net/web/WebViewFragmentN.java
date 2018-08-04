@@ -282,7 +282,7 @@ public class WebViewFragmentN extends Fragment implements IWebListener, View.OnC
         setLoadingBar();
     }
 
-    private void loadWebPage(String s) {
+    public void loadWebPage(String s) {
         if (webView != null) {
             webView.loadUrl(s);
         }
