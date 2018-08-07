@@ -35,7 +35,6 @@
     </declare-styleable>
     <!--banner-->
     <declare-styleable name="PBanner">
-        <attr name="ilWidth" format="dimension" />
         <attr name="ilHeight" format="dimension" />
         <attr name="ilColor" format="color" />
         <attr name="piWidth" format="dimension" />
@@ -43,6 +42,7 @@
         <attr name="piSelectedColor" format="color" />
         <attr name="piNormalColor" format="color" />
         <attr name="piMargin" format="dimension" />
+        <attr name="piRadius" format="dimension" />
         <attr name="mTitleSize" format="dimension" />
         <attr name="mTitleColor" format="color" />
         <attr name="mNumSize" format="dimension" />

@@ -18,9 +18,16 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        app:showModel="NONE"
-
-        >
+        app:ilHeight="20dp"
+        app:mLocation="CENTER"
+        app:periodicTime="5000"
+        app:piHeight="4dp"
+        app:piWidth="6dp"
+        app:piRadius="1dp"
+        app:piMargin="8dp"
+        app:piNormalColor="@color/white_a60"
+        app:piSelectedColor="@color/white"
+        app:showModel="NONE">
 
     </com.bpz.commonlibrary.ui.banner.PBanner>
 

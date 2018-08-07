@@ -13,6 +13,7 @@ import com.bpz.commonlibrary.bus.RxBus;
 import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.mvp.BaseView;
 import com.bpz.commonlibrary.util.LogUtil;
+import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.components.RxFragment;
 
 /**
@@ -256,5 +257,10 @@ public abstract class BaseFragment<P extends BasePresenter>
     public void onDestroy() {
         super.onDestroy();
         LogUtil.e(mFragmentTag + getTag(), "onDestroy()");
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindToLife() {
+        return this.bindToLifecycle();
     }
 }

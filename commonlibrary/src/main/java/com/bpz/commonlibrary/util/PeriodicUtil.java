@@ -29,7 +29,6 @@ public class PeriodicUtil {
         if (!isSchedule()) {
             return;
         }
-
         if (progressUpdateTask != null) {
             progressUpdateTask.cancel();
             isSchedule = false;

@@ -3,25 +3,28 @@ package com.bpz.commonlibrary.ui.fragment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.AbsListView;
 
 import com.bpz.commonlibrary.R;
 import com.bpz.commonlibrary.mvp.BaseListView;
+import com.bpz.commonlibrary.ui.recycler.MyDragListener;
+import com.bpz.commonlibrary.ui.recycler.MyTouchHelperCallback;
+import com.bpz.commonlibrary.ui.recycler.TouchListener;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
+import com.bpz.commonlibrary.util.ListUtil;
 import com.bpz.commonlibrary.util.LogUtil;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class BaseRefreshFragment<T> extends BaseFragment
-        implements OnRefreshLoadMoreListener, BaseListView<T> {
+        implements OnRefreshLoadMoreListener, BaseListView<T>,
+        TouchListener, MyDragListener {
     public StateLayout mStateLayout;
     public View refreshView;
     public SmartRefreshLayout mRefreshLayout;
@@ -38,6 +41,9 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public boolean hasMore = true;
     public boolean onRefreshing = false;
 
+    public boolean canMove = false;
+    public boolean canSwipe = false;
+    public ItemTouchHelper mItemTouchHelper;
 
     @Override
     public boolean isNeedLazy() {
@@ -73,6 +79,12 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
         }
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        mItemTouchHelper = new ItemTouchHelper(
+                new MyTouchHelperCallback(this, canMove, canSwipe)
+        );
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         onLoading();
         //设置下拉刷新，上拉加载更多的监听器
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
@@ -97,6 +109,47 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public void onLoading() {
         if (mStateLayout != null) {
             mStateLayout.showCurrentPage(StateLayout.State.ON_LOADING);
+        }
+    }
+
+    @Override
+    public boolean onMove(int fromPosition, int toPosition) {
+        if (mAdapter != null) {
+            Collections.swap(mDataList, fromPosition, toPosition);
+            mAdapter.notifyItemMoved(fromPosition, toPosition);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onSwipe(int position) {
+        if (mAdapter != null) {
+            itemSwipe(position);
+        }
+    }
+
+    @Override
+    public void onTouchFinish(RecyclerView.ViewHolder viewHolder, int actionState) {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 子类复写此方法可自行处理左右的滑动事件
+     *
+     * @param position 当前条目索引
+     */
+    public void itemSwipe(int position) {
+        mDataList.remove(ListUtil.getCorrectPosition(mDataList, position));
+        mAdapter.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        if (mItemTouchHelper != null) {
+            mItemTouchHelper.startDrag(viewHolder);
         }
     }
 

@@ -21,6 +21,8 @@ import android.support.v7.content.res.AppCompatResources;
 
 import com.bpz.commonlibrary.entity.StrokeEntity;
 
+import org.jetbrains.annotations.Contract;
+
 
 /**
  * Created by Administrator on 2018/5/7.
@@ -71,10 +73,13 @@ public class BgResUtil {
                 drawable.setColor(colors.getColorForState(drawable.getState(), Color.TRANSPARENT));
             }
         }
-        StrokeEntity.setStroke(drawable, strokeEntity);
+        if (strokeEntity != null) {
+            StrokeEntity.setStroke(drawable, strokeEntity);
+        }
         return drawable;
     }
 
+    @Contract(pure = true)
     private static boolean hasNativeStateListAPI() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
@@ -180,6 +185,7 @@ public class BgResUtil {
         return layerDrawable;
     }
 
+    @Nullable
     public static Bitmap vectorDrawableToBitmap(Context context, @DrawableRes int resVector) {
         Drawable drawable = getVectorDrawable(context, resVector);
         if (drawable != null) {

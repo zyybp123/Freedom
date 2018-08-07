@@ -11,12 +11,16 @@ import android.view.ViewGroup;
 
 import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.mvp.BaseView;
+import com.bpz.commonlibrary.ui.banner.PBanner;
 import com.bpz.commonlibrary.ui.fragment.BaseRefreshFragment;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ImgUrl;
 import com.bpz.freedom.R;
 import com.bpz.freedom.adapter.Adapter2Test;
+import com.bpz.freedom.adapter.Adapter2Test2;
+import com.bpz.freedom.entity.BannerEntity;
+import com.bpz.freedom.entity.TestEntity;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
@@ -25,12 +29,9 @@ import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
-public class TestFragment extends BaseRefreshFragment<Integer> {
-    @Override
-    public RecyclerView.Adapter getAdapter() {
-        showFooter = true;
-        return new Adapter2Test(R.layout.item_test, mDataList);
-    }
+public class TestFragment extends BaseRefreshFragment<TestEntity> {
+    List<BannerEntity> list = new ArrayList<>();
+    PBanner<BannerEntity> banner;
 
     @Override
     public void initialRequest() {
@@ -38,17 +39,78 @@ public class TestFragment extends BaseRefreshFragment<Integer> {
     }
 
     @Override
-    protected BasePresenter<BaseView> getPresenter() {
-        return null;
+    public RecyclerView.Adapter getAdapter() {
+        showFooter = true;
+        //canMove = true;
+        canSwipe = true;
+
+        banner = new PBanner<>(mActivity);
+        banner.setModel(PBanner.Model.ONLY_INDICATOR);
+        banner.setLocation(PBanner.Location.CENTER);
+        banner.setDataList(list);
+        banner.setBannerListener(new PBanner.BannerListener<BannerEntity>() {
+            @Override
+            public void onItemClick(int position, BannerEntity itemData) {
+                //条目点击事件
+                String bannerClickUrl = itemData.getBannerClickUrl();
+                //webViewFragmentN.loadWebPage(bannerClickUrl);
+            }
+        });
+        Adapter2Test2 adapter2Test = new Adapter2Test2(mDataList);
+        return adapter2Test;
+    }
+
+    @Override
+    protected void toLoadMore() {
+        getRequest();
+        if (mCurrentPage >= 3) {
+            hasMore = false;
+        }
+        LogUtil.e(mFragmentTag, "load more....");
+        LogUtil.e(mFragmentTag, "current page is: " + mCurrentPage);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (banner != null){
+            banner.autoStart();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (banner != null){
+            banner.autoStop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (banner != null){
+            banner.onDestroy();
+        }
+    }
+
+    @Override
+    protected void toRefresh() {
+        getRequest();
+        LogUtil.e(mFragmentTag, "refresh....");
     }
 
     public void getRequest() {
         new Thread() {
             @Override
             public void run() {
-                final ArrayList<Integer> numbers = new ArrayList<>();
+                final ArrayList<TestEntity> numbers = new ArrayList<>();
+                for (int i = 0; i < ImgUrl.IMG_S.length; i++) {
+                    list.add(new BannerEntity(ImgUrl.IMG_S[i], ImgUrl.IMG_S[i], "标题" + (i + 1)));
+                }
+                //numbers.add(new TestEntity(Adapter2Test2.ITEM_BANNER,list));
                 for (int i = 0; i < 20; i++) {
-                    numbers.add(i);
+                    numbers.add(new TestEntity(Adapter2Test2.ITEM_LIST,i));
                 }
                 try {
                     Thread.sleep(3000);
@@ -68,21 +130,9 @@ public class TestFragment extends BaseRefreshFragment<Integer> {
     }
 
     @Override
-    protected void toLoadMore() {
-        getRequest();
-        if (mCurrentPage >= 3) {
-            hasMore = false;
-        }
-        LogUtil.e(mFragmentTag, "load more....");
-        LogUtil.e(mFragmentTag,"current page is: " + mCurrentPage);
+    protected BasePresenter<BaseView> getPresenter() {
+        return null;
     }
-
-    @Override
-    protected void toRefresh() {
-        getRequest();
-        LogUtil.e(mFragmentTag, "refresh....");
-    }
-
 
     @Override
     public void onSubscribe(String methodTag, Disposable d) {

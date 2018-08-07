@@ -25,6 +25,7 @@ public class LoginPresenter extends BasePresenterImpl<LoginView> {
     public void doLogin(String accountName, String pwd) {
         service.doLogin(accountName, pwd)
                 .compose(RetrofitTool.<ResultEntity<LoginInfo>>setMainThread())
+                .compose(mView.<ResultEntity<LoginInfo>>bindToLife())
                 .subscribe(new BaseObserver<LoginInfo>(mView, LoginService.LOGIN_PATH) {
                     @Override
                     public void onFailure(String methodTag, int code, String describe) {

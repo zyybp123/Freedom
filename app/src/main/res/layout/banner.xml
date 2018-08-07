@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.bpz.commonlibrary.ui.banner.PBanner xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/banner"
     android:layout_width="match_parent"
-    android:layout_height="240dp">
+    android:layout_height="210dp"
+    app:ilHeight="20dp"
+    app:mLocation="CENTER"
+    app:periodicTime="5000"
+    app:piHeight="4dp"
+    app:piMargin="8dp"
+    app:piNormalColor="@color/white_a60"
+    app:piRadius="1dp"
+    app:piSelectedColor="@color/white"
+    app:piWidth="6dp"
+    app:showModel="NONE">
 
 </com.bpz.commonlibrary.ui.banner.PBanner>

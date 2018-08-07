@@ -17,6 +17,6 @@ public class Adapter2Test extends BaseQuickAdapter<Integer, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Integer item) {
-        helper.setText(R.id.tv_name, "这是第 " + item + " 条");
+        helper.setText(R.id.tv_name, "这是第 " + helper.getAdapterPosition() + " 条");
     }
 }

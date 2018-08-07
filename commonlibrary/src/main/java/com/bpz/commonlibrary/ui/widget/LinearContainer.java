@@ -27,7 +27,7 @@ public class LinearContainer extends LinearLayout {
     /**
      * 添加标签时的参数
      */
-    public ViewGroup.LayoutParams mParams;
+    public LinearLayout.LayoutParams mParams;
     /**
      * 是否均分，默认均分，true为均分
      */

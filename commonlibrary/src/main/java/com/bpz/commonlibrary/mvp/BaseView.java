@@ -1,5 +1,7 @@
 package com.bpz.commonlibrary.mvp;
 
+import com.trello.rxlifecycle2.LifecycleTransformer;
+
 import io.reactivex.disposables.Disposable;
 
 public interface BaseView {
@@ -24,4 +26,12 @@ public interface BaseView {
     void onEmpty(String methodTag);
 
     void noNet();
+
+    /**
+     * 绑定生命周期
+     *
+     * @param <T>
+     * @return
+     */
+    <T> LifecycleTransformer<T> bindToLife();
 }

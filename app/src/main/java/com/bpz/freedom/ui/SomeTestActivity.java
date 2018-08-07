@@ -70,9 +70,9 @@ public class SomeTestActivity extends AppCompatActivity {
                 .commit();
         List<BannerEntity> list = new ArrayList<>();
         for (int i = 0; i < ImgUrl.IMG_S.length; i++) {
-            list.add(new BannerEntity(ImgUrl.IMG_S[i], ImgUrl.IMG_S[i]));
+            list.add(new BannerEntity(ImgUrl.IMG_S[i], ImgUrl.IMG_S[i],"标题" + (i + 1)));
         }
-        banner.setModel(PBanner.Model.ONLY_TITLE);
+        banner.setModel(PBanner.Model.ONLY_INDICATOR);
         banner.setLocation(PBanner.Location.CENTER);
         banner.setDataList(list);
         banner.setBannerListener(new PBanner.BannerListener<BannerEntity>() {
@@ -83,7 +83,30 @@ public class SomeTestActivity extends AppCompatActivity {
                 webViewFragmentN.loadWebPage(bannerClickUrl);
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        if (banner != null) {
+            banner.autoStart();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        if (banner != null){
+            banner.autoStop();
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (banner != null){
+            banner.autoStop();
+        }
+        super.onDestroy();
     }
 
     @Override
