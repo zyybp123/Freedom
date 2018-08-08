@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.bpz.commonlibrary.adapter.base.MyBaseRecyclerAdapter;
 import com.bpz.commonlibrary.adapter.base.MyBaseViewHolder;
 import com.bpz.commonlibrary.ui.banner.PBanner;
+import com.bpz.commonlibrary.ui.recycler.MyDragListener;
 import com.bpz.freedom.R;
 import com.bpz.freedom.entity.BannerEntity;
 import com.bpz.freedom.entity.TestEntity;
@@ -26,7 +27,10 @@ public class Adapter2Test2 extends MyBaseRecyclerAdapter<TestEntity, MyBaseViewH
     public Adapter2Test2(List<TestEntity> mDataList) {
         super(mDataList);
     }
-
+    public Adapter2Test2(List<TestEntity> mDataList, MyDragListener listener){
+        super(mDataList);
+        dragStartListener = listener;
+    }
     @NonNull
     @Override
     public MyBaseViewHolder getMyViewHolder(ViewGroup parent, int viewType) {
@@ -54,7 +58,7 @@ public class Adapter2Test2 extends MyBaseRecyclerAdapter<TestEntity, MyBaseViewH
         }
 
         if (tvName != null) {
-            tvName.setText("这是" + (position - 1) + "条数据！");
+            tvName.setText("这是" + (holder.getAdapterPosition()) + "条数据！");
         }
     }
 

@@ -63,6 +63,10 @@ public class StateLayout extends FrameLayout {
         pbLoading = baseOtherView.findViewById(R.id.fr_pb_loading);
         ivState = baseOtherView.findViewById(R.id.fr_iv_state);
         tvTips = baseOtherView.findViewById(R.id.fr_tv_tips);
+        if (isOpenDefault) {
+            //其它状态公用一个界面时，添加进这个页面
+            addView(baseOtherView);
+        }
     }
 
 
@@ -84,14 +88,29 @@ public class StateLayout extends FrameLayout {
 
     public void setOpenDefault(boolean openDefault) {
         isOpenDefault = openDefault;
+        if (!isOpenDefault && baseOtherView != null) {
+            removeView(baseOtherView);
+        }
     }
 
     public StateLayout setStatePage(int state, View view) {
-        if (view == null) {
-            LogUtil.e(TAG, "state view is null !");
+        if (view == null || mPages == null) {
+            LogUtil.e(TAG, "state view or pages is null !");
             return this;
         }
+        if (isOpenDefault) {
+            //是使用默认布局显示其它状态界面时，只添加成功状态的界面的布局
+            if (state != State.ON_SUCCESS) {
+                return this;
+            }
+        }
+        View viewTemp = mPages.get(state);
+        if (viewTemp != null) {
+            //已经添加到容器中,要更新容器里的视图
+            removeView(viewTemp);
+        }
         mPages.put(state, view);
+        addView(view);
         return this;
     }
 
@@ -136,18 +155,24 @@ public class StateLayout extends FrameLayout {
             return;
         }
         if (isOpenDefault) {
+            LogUtil.e(TAG, "currentState --->" + currentState);
             //其他状态，共用一个界面的情况
-            removeAllViews();
             View view = mPages.get(State.ON_SUCCESS);
             if (currentState == State.ON_SUCCESS) {
                 if (view != null) {
                     view.setVisibility(VISIBLE);
-                    addView(view);
+                }
+                if (baseOtherView != null) {
+                    baseOtherView.setVisibility(GONE);
                 }
             } else {
-                baseOtherView.setVisibility(VISIBLE);
+                if (view != null) {
+                    view.setVisibility(GONE);
+                }
+                if (baseOtherView != null) {
+                    baseOtherView.setVisibility(VISIBLE);
+                }
                 defaultLayoutSet();
-                addView(baseOtherView);
             }
             return;
         }
@@ -155,12 +180,10 @@ public class StateLayout extends FrameLayout {
         for (int state : states) {
             View view = mPages.get(state);
             if (view != null) {
-                //能找到对应状态的view，只显示当前状态的view,将view加入容器
+                //能找到对应状态的view，只显示当前状态的view
                 boolean isCurrent = currentState == state;
                 if (isCurrent) {
-                    removeAllViews();
                     view.setVisibility(VISIBLE);
-                    addView(view, params);
                 } else {
                     view.setVisibility(GONE);
                 }

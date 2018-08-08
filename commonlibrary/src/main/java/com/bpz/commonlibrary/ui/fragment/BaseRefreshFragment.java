@@ -40,10 +40,21 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public boolean showHeader = true;
     public boolean hasMore = true;
     public boolean onRefreshing = false;
-
+    private boolean onLoadMore = false;
+    /**
+     * 是否允许长按拖拽条目
+     */
     public boolean canMove = false;
-    public boolean canSwipe = false;
     public ItemTouchHelper mItemTouchHelper;
+    /**
+     * 默认不允许条目的侧滑
+     */
+    public boolean canSwipe = false;
+    /**
+     * 是否允许拖拽手柄移动条目
+     */
+    public boolean canDragHandle = false;
+
 
     @Override
     public boolean isNeedLazy() {
@@ -131,7 +142,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
 
     @Override
     public void onTouchFinish(RecyclerView.ViewHolder viewHolder, int actionState) {
-        if (mAdapter != null) {
+        if (!canSwipe && mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -148,7 +159,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        if (mItemTouchHelper != null) {
+        if (canDragHandle && mItemTouchHelper != null) {
             mItemTouchHelper.startDrag(viewHolder);
         }
     }
@@ -163,7 +174,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
             mRefreshLayout.finishRefresh();
             onRefreshing = false;
         }
-        if (showFooter) {
+        if (showFooter && onLoadMore) {
             if (hasMore) {
                 LogUtil.e(mFragmentTag, "load more end");
                 //还有更多数据
@@ -172,11 +183,13 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
                 //显示全部加载完成，并不再触发加载更事件
                 mRefreshLayout.finishLoadMoreWithNoMoreData();
             }
+            onLoadMore = false;
         }
     }
 
     public void showSuccess() {
         if (mStateLayout != null) {
+            //hasShowSuccess = true;
             mStateLayout.showCurrentPage(StateLayout.State.ON_SUCCESS);
         }
     }
@@ -185,6 +198,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public void refreshFail() {
         if (mRefreshLayout != null) {
             mRefreshLayout.finishRefresh(false);
+            onRefreshing = false;
         }
     }
 
@@ -192,6 +206,8 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public void loadMoreFail() {
         if (mRefreshLayout != null) {
             mRefreshLayout.finishLoadMore(false);
+            onLoadMore = false;
+            //hasMore = false;
         }
     }
 
@@ -219,6 +235,7 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public void canLoadMore() {
         LogUtil.e(mFragmentTag, "canLoadMore currentPage: " + mCurrentPage);
         if (hasMore) {
+            onLoadMore = true;
             mCurrentPage++;
             toLoadMore();
         }

@@ -1,9 +1,11 @@
 package com.bpz.freedom.ui.fragment;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.mvp.BaseView;
 import com.bpz.commonlibrary.ui.banner.PBanner;
 import com.bpz.commonlibrary.ui.fragment.BaseRefreshFragment;
+import com.bpz.commonlibrary.ui.recycler.RecycleViewDivider;
 import com.bpz.commonlibrary.ui.widget.StateLayout;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ImgUrl;
@@ -41,8 +44,10 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
     @Override
     public RecyclerView.Adapter getAdapter() {
         showFooter = true;
-        //canMove = true;
-        canSwipe = true;
+        canMove = true;
+        /*mRecyclerView.addItemDecoration(new RecycleViewDivider(mActivity,
+                LinearLayoutManager.HORIZONTAL,1, Color.BLUE));*/
+        //canSwipe = true;
 
         banner = new PBanner<>(mActivity);
         banner.setModel(PBanner.Model.ONLY_INDICATOR);
@@ -56,7 +61,7 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
                 //webViewFragmentN.loadWebPage(bannerClickUrl);
             }
         });
-        Adapter2Test2 adapter2Test = new Adapter2Test2(mDataList);
+        Adapter2Test2 adapter2Test = new Adapter2Test2(mDataList,this);
         return adapter2Test;
     }
 
@@ -64,10 +69,9 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
     protected void toLoadMore() {
         getRequest();
         if (mCurrentPage >= 3) {
-            hasMore = false;
+            //hasMore = false;
+            loadMoreFail();
         }
-        LogUtil.e(mFragmentTag, "load more....");
-        LogUtil.e(mFragmentTag, "current page is: " + mCurrentPage);
     }
 
     @Override

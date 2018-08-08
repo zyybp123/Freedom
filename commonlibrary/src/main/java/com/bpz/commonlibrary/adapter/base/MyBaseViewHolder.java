@@ -15,6 +15,6 @@ public class MyBaseViewHolder extends RecyclerView.ViewHolder {
      * 子类复写此方法可获取一个拖拽手柄的view对象
      */
     public View getHandleView() {
-        return null;
+        return itemView;
     }
 }

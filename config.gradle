@@ -16,7 +16,7 @@ ext {
             gson    : "2.8.0",
             leak    : "1.5.4",
             cons    : "2.0.0-alpha1",
-            refresh : "1.1.0-alpha-12"
+            refresh : "1.1.0-alpha-14"
     ]
 
     dependencies = [

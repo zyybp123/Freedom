@@ -1,6 +1,7 @@
 package com.bpz.freedom.ui.fragment;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,9 @@ import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
 import com.bpz.freedom.ui.SomeTestActivity;
 import com.google.gson.Gson;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.Arrays;
 
@@ -28,6 +32,7 @@ public class FragmentMine extends BaseFragment {
     EditText etHost;
     TextView tvSure;
     TextView tvTest;
+    SmartRefreshLayout refreshLayout;
 
     @Override
     public boolean isNeedLazy() {
@@ -54,6 +59,7 @@ public class FragmentMine extends BaseFragment {
         etHost = mRootView.findViewById(R.id.et_host);
         tvSure = mRootView.findViewById(R.id.btn_sure);
         tvTest = mRootView.findViewById(R.id.tv_test);
+        refreshLayout = mRootView.findViewById(R.id.fr_refresh_layout);
         String text = "vafiz12yyhaasf你好sz12yyi你好dofizSLLLLL11yyaaaslsdf你zyy好slkdajfiojos你好a你好id" +
                 "jfohd你好你好soifwsdsshszyyohfasil你好lkzSL12LLLLyylswsdss";
         String[] changes = new String[]{"你好", "zyy", "i", "ss"};
@@ -82,6 +88,48 @@ public class FragmentMine extends BaseFragment {
             }
         });
 
+        refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3000);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataHereMore();
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                new Thread(){
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(3000);
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dataHere();
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
+            }
+        });
+
 
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +143,16 @@ public class FragmentMine extends BaseFragment {
             }
         });
 
+
+
+    }
+
+    private void dataHereMore() {
+        refreshLayout.finishLoadMore();
+    }
+
+    private void dataHere() {
+        refreshLayout.finishRefresh();
     }
 
     @Override
