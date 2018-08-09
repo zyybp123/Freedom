@@ -48,6 +48,7 @@ dependencies {
     api rootProject.ext.dependencies["okhttp-logging"]
     api rootProject.ext.dependencies["gson"]
     api rootProject.ext.dependencies["constraint"]
+    api rootProject.ext.dependencies["qmui"]
     //glide
     api('com.github.bumptech.glide:glide:4.5.0') {
         exclude group: 'com.android.support'

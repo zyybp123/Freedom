@@ -18,6 +18,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +34,35 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     public RecyclerView.Adapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
     public List<T> mDataList = new ArrayList<>();
+    /**
+     * 分页加载时的当前页
+     */
     public int mCurrentPage = 1;
     /**
-     * 默认显示下拉刷新头，不显示上拉加载更多
+     * 默认允许下拉刷新,不允许上拉加载更多
      */
-    public boolean showFooter = false;
-    public boolean showHeader = true;
-    public boolean hasMore = true;
+    public boolean refreshEnabled = true;
+    public boolean loadMoreEnabled = false;
+    /**
+     * 是否还有更多数据
+     */
+    public boolean hasMoreData = true;
+    /**
+     * 是否在下拉刷新中
+     */
     public boolean onRefreshing = false;
-    private boolean onLoadMore = false;
+    /**
+     * 是否在上拉加载更多中
+     */
+    public boolean onLoadingMore = false;
+    /**
+     * 上拉加载更多失败
+     */
+    public boolean onLoadMoreFail = false;
+    /**
+     * 下拉刷新失败
+     */
+    public boolean onRefreshFail = false;
     /**
      * 是否允许长按拖拽条目
      */
@@ -101,9 +123,11 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
         mRefreshLayout.setOnRefreshLoadMoreListener(this);
         //设置是否自动加载更多
         mRefreshLayout.setEnableAutoLoadMore(false);
-        //设置不满一屏是否显示上拉加载更多
+        //设置不满一屏不显示上拉加载更多
         mRefreshLayout.setEnableLoadMoreWhenContentNotFull(false);
-        mRefreshLayout.setEnableLoadMore(showFooter);
+        //设置是否下拉刷新和上拉加载更多
+        mRefreshLayout.setEnableLoadMore(loadMoreEnabled);
+        mRefreshLayout.setEnableRefresh(refreshEnabled);
     }
 
     /**
@@ -165,17 +189,60 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     }
 
     @Override
-    public void getListDataSuccess(List<T> data) {
+    public void getListDataSuccess(@NotNull List<T> data) {
         showSuccess();
-        mDataList.addAll(data);
-        mAdapter.notifyDataSetChanged();
-        if (onRefreshing) {
-            LogUtil.e(mFragmentTag, "refresh end");
-            mRefreshLayout.finishRefresh();
-            onRefreshing = false;
+        if (!onRefreshing && !onLoadingMore){
+            mDataList.addAll(data);
+            mAdapter.notifyDataSetChanged();
         }
-        if (showFooter && onLoadMore) {
-            if (hasMore) {
+        if (!refreshEnabled) {
+            //不允许下拉刷新
+            if (!loadMoreEnabled) {
+                //不允许上拉加载更多，每次加载重置状态，设置数据即可
+                resetDataStatus();
+                mDataList.addAll(data);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                dealLoadMore(data);
+            }
+        } else {
+            //有下拉刷新
+            if (onRefreshing && !onRefreshFail) {
+                //在下拉刷新中，且下拉刷新成功，更新数据
+                LogUtil.e(mFragmentTag, "refresh end");
+                mDataList.addAll(data);
+                mAdapter.notifyDataSetChanged();
+                mRefreshLayout.finishRefresh();
+                onRefreshing = false;
+            }
+            if (loadMoreEnabled) {
+                dealLoadMore(data);
+            }
+        }
+    }
+
+    public void showSuccess() {
+        if (mStateLayout != null) {
+            mStateLayout.showCurrentPage(StateLayout.State.ON_SUCCESS);
+        }
+    }
+
+    private void resetDataStatus() {
+        onRefreshFail = false;
+        onLoadMoreFail = false;
+        onRefreshing = false;
+        onLoadingMore = false;
+        if (mDataList != null) {
+            mDataList.clear();
+        }
+    }
+
+    public void dealLoadMore(List<T> data) {
+        if (onLoadingMore && !onLoadMoreFail) {
+            //上拉加载更多中且上拉加载更多未失败
+            mDataList.addAll(data);
+            mAdapter.notifyDataSetChanged();
+            if (hasMoreData) {
                 LogUtil.e(mFragmentTag, "load more end");
                 //还有更多数据
                 mRefreshLayout.finishLoadMore();
@@ -183,31 +250,28 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
                 //显示全部加载完成，并不再触发加载更事件
                 mRefreshLayout.finishLoadMoreWithNoMoreData();
             }
-            onLoadMore = false;
-        }
-    }
-
-    public void showSuccess() {
-        if (mStateLayout != null) {
-            //hasShowSuccess = true;
-            mStateLayout.showCurrentPage(StateLayout.State.ON_SUCCESS);
+            onLoadingMore = false;
+            onLoadMoreFail = false;
         }
     }
 
     @Override
     public void refreshFail() {
+        //下拉刷新失败
+        onRefreshing = false;
+        onRefreshFail = true;
         if (mRefreshLayout != null) {
             mRefreshLayout.finishRefresh(false);
-            onRefreshing = false;
         }
     }
 
     @Override
     public void loadMoreFail() {
+        //上拉加载更多失败
+        onLoadingMore = false;
+        onLoadMoreFail = true;
         if (mRefreshLayout != null) {
             mRefreshLayout.finishLoadMore(false);
-            onLoadMore = false;
-            //hasMore = false;
         }
     }
 
@@ -218,15 +282,6 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
         return mRecyclerView != null && !mRecyclerView.canScrollVertically(1);
     }
 
-    /**
-     * 继续获取数据，子类需要覆盖此方法
-     */
-    public void getMoreOrStop() {
-        LogUtil.e(mFragmentTag, "getMoreOrStop");
-        //默认处理，不加载更多
-        mRefreshLayout.setEnableLoadMore(false);
-    }
-
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         canLoadMore();
@@ -234,9 +289,13 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
 
     public void canLoadMore() {
         LogUtil.e(mFragmentTag, "canLoadMore currentPage: " + mCurrentPage);
-        if (hasMore) {
-            onLoadMore = true;
-            mCurrentPage++;
+        if (hasMoreData) {
+            //有更多数据，上拉加载更多
+            onLoadingMore = true;
+            if (!onLoadMoreFail) {
+                //如果上拉加载更多数没有失败，才继续加页
+                mCurrentPage++;
+            }
             toLoadMore();
         }
     }
@@ -246,8 +305,11 @@ public abstract class BaseRefreshFragment<T> extends BaseFragment
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         //刷新中，重置集合，当前页数，刷新中的标识，加载更多的标识
+        hasMoreData = true;
         onRefreshing = true;
-        hasMore = true;
+        onLoadingMore = false;
+        onLoadMoreFail = false;
+        onRefreshFail = false;
         mCurrentPage = 1;
         mDataList.clear();
         mRefreshLayout.setNoMoreData(false);

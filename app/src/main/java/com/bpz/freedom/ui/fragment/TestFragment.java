@@ -39,16 +39,16 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
     @Override
     public void initialRequest() {
         getRequest();
+        //mRefreshLayout.autoRefresh();
     }
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        showFooter = true;
         canMove = true;
         /*mRecyclerView.addItemDecoration(new RecycleViewDivider(mActivity,
                 LinearLayoutManager.HORIZONTAL,1, Color.BLUE));*/
         //canSwipe = true;
-
+        loadMoreEnabled = true;
         banner = new PBanner<>(mActivity);
         banner.setModel(PBanner.Model.ONLY_INDICATOR);
         banner.setLocation(PBanner.Location.CENTER);
@@ -61,41 +61,14 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
                 //webViewFragmentN.loadWebPage(bannerClickUrl);
             }
         });
-        Adapter2Test2 adapter2Test = new Adapter2Test2(mDataList,this);
+        Adapter2Test2 adapter2Test = new Adapter2Test2(mDataList, this);
         return adapter2Test;
     }
 
     @Override
     protected void toLoadMore() {
         getRequest();
-        if (mCurrentPage >= 3) {
-            //hasMore = false;
-            loadMoreFail();
-        }
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (banner != null){
-            banner.autoStart();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (banner != null){
-            banner.autoStop();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (banner != null){
-            banner.onDestroy();
-        }
     }
 
     @Override
@@ -114,9 +87,13 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
                 }
                 //numbers.add(new TestEntity(Adapter2Test2.ITEM_BANNER,list));
                 for (int i = 0; i < 20; i++) {
-                    numbers.add(new TestEntity(Adapter2Test2.ITEM_LIST,i));
+                    numbers.add(new TestEntity(Adapter2Test2.ITEM_LIST, i));
                 }
                 try {
+                    if (mCurrentPage >= 3) {
+                        loadMoreFail();
+                        return;
+                    }
                     Thread.sleep(3000);
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
@@ -124,7 +101,6 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
                             getListDataSuccess(numbers);
                         }
                     });
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     onError("getList", e.getMessage());
@@ -136,6 +112,30 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
     @Override
     protected BasePresenter<BaseView> getPresenter() {
         return null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (banner != null) {
+            banner.autoStart();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (banner != null) {
+            banner.autoStop();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (banner != null) {
+            banner.onDestroy();
+        }
     }
 
     @Override

@@ -21,7 +21,9 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.View;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -87,16 +89,48 @@ public class SpanUtil {
 
     public static SpannableString changeColor(@NotNull SpannableString text, String change) {
         String dest = text.subSequence(0, text.length()).toString();
-
         LocaleSpan localeSpan = new LocaleSpan(Locale.getDefault());
         //LineHeightSpan
         //ImageSpan imageSpan = new ImageSpan();
         return text;
     }
 
+    @Contract(pure = true)
     public static SpannableString setImg(@NotNull SpannableString spanString,
                                          List<String> changes) {
         return spanString;
+    }
+
+    public static SpannableString someClick(@NotNull SpannableString spanString,
+                                            List<String> changes, final View.OnClickListener listener) {
+        String text = spanString.subSequence(0, spanString.length()).toString();
+        if (StringUtil.isSpace(text) || changes == null || changes.size() == 0) {
+            return spanString;
+        }
+        int changesSize = changes.size();
+        //取文本集合做循环
+        for (int i = 0; i < changesSize; i++) {
+            String change = changes.get(i);
+            List<Integer> indexList = StringUtil.getIndexList(text, change);
+            if (indexList.size() > 0) {
+                for (int j = 0; j < indexList.size(); j++) {
+                    int start = indexList.get(j);
+                    int end = start + change.length();
+                    ClickableSpan span = new ClickableSpan() {
+                        @Override
+                        public void onClick(View widget) {
+                            if (listener != null) {
+                                listener.onClick(widget);
+                            }
+                        }
+                    };
+                    spanString.setSpan(span, start, end,
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+        }
+        return spanString;
+
     }
 
     /**
@@ -108,9 +142,9 @@ public class SpanUtil {
      * @param model       0:相对大小，其它:X方向的缩放
      * @return 返回设置后的格式文本
      */
-    public static SpannableString somScale(@NotNull SpannableString spanString,
-                                           List<String> changes, List<Float> proportions,
-                                           int model) {
+    public static SpannableString someScale(@NotNull SpannableString spanString,
+                                            List<String> changes, List<Float> proportions,
+                                            int model) {
         String text = spanString.subSequence(0, spanString.length()).toString();
         if (StringUtil.isSpace(text) || changes == null || changes.size() == 0) {
             return spanString;

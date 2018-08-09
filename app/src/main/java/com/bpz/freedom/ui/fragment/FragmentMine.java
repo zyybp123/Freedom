@@ -3,8 +3,11 @@ package com.bpz.freedom.ui.fragment;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bpz.commonlibrary.mvp.BasePresenter;
@@ -19,6 +22,7 @@ import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
 import com.bpz.freedom.ui.SomeTestActivity;
 import com.google.gson.Gson;
+import com.qmuiteam.qmui.widget.textview.QMUILinkTextView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -33,6 +37,7 @@ public class FragmentMine extends BaseFragment {
     TextView tvSure;
     TextView tvTest;
     SmartRefreshLayout refreshLayout;
+    LinearLayout llTest;
 
     @Override
     public boolean isNeedLazy() {
@@ -59,15 +64,18 @@ public class FragmentMine extends BaseFragment {
         etHost = mRootView.findViewById(R.id.et_host);
         tvSure = mRootView.findViewById(R.id.btn_sure);
         tvTest = mRootView.findViewById(R.id.tv_test);
+        tvTest.setMovementMethod(LinkMovementMethod.getInstance());
         refreshLayout = mRootView.findViewById(R.id.fr_refresh_layout);
+        llTest = mRootView.findViewById(R.id.ll_test);
         String text = "vafiz12yyhaasf你好sz12yyi你好dofizSLLLLL11yyaaaslsdf你zyy好slkdajfiojos你好a你好id" +
-                "jfohd你好你好soifwsdsshszyyohfasil你好lkzSL12LLLLyylswsdss";
+                "jfohd你好你好soifwsdsshszyyohfasil你好lkzSL12LL展开全文LLyylswsdss";
         String[] changes = new String[]{"你好", "zyy", "i", "ss"};
         Integer[] colors = new Integer[]{Color.MAGENTA, Color.RED, Color.GREEN};
         String[] changes1 = new String[]{"LLL"};
         String[] changes2 = new String[]{"12"};
         String[] changes3 = new String[]{"aas"};
         String[] changes4 = new String[]{"wsdss"};
+        String[] changes5 = new String[]{"展开全文"};
         SpannableString spannableString3 = SpanUtil.changeColors(
                 new SpannableString(text), Arrays.asList(changes), Arrays.asList(colors)
                 , SpanUtil.COLOR_FOREGROUND);
@@ -79,9 +87,18 @@ public class FragmentMine extends BaseFragment {
                 , SpanUtil.STYLE_SUBSCRIPT);
         SpannableString sup = SpanUtil.someStyle(sub, Arrays.asList(changes4)
                 , SpanUtil.STYLE_SUPERSCRIPT);
+        SpanUtil.someClick(sup, Arrays.asList(changes5), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtil.e(mFragmentTag, "click ... " + v);
+            }
+        });
+        QMUILinkTextView textView = new QMUILinkTextView(mActivity);
+        textView.setText("1234567,http://www.baidu.com,ajdallskdla;kdlkal;");
+        //textView.set
         tvTest.setText(sup);
 
-        tvTest.setOnClickListener(new View.OnClickListener() {
+        llTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SomeTestActivity.startSelf(mActivity);
@@ -91,7 +108,7 @@ public class FragmentMine extends BaseFragment {
         refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         try {
@@ -111,7 +128,7 @@ public class FragmentMine extends BaseFragment {
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                new Thread(){
+                new Thread() {
                     @Override
                     public void run() {
                         try {
@@ -142,7 +159,6 @@ public class FragmentMine extends BaseFragment {
                 //SPUtil.getInstance("config").put("aaa", 123);
             }
         });
-
 
 
     }
