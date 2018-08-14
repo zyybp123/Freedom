@@ -69,18 +69,23 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
                 WebViewFragmentN.URL_ONLY, null, false));
         fragmentList.add(new TestFragment());
         fragmentList.add(new FragmentMine());
+
         if (savedInstanceState != null) {
             //崩溃造成的fragment显示异常处理
             int cachedId = savedInstanceState.getInt(POSITION, 0);
             if (cachedId >= 0 && cachedId < fragmentList.size()) {
                 currentPosition = cachedId;
                 LogUtil.e(TAG, "hide current: " + currentPosition);
-                getFragmentManager()
-                        .beginTransaction()
-                        .remove(getFragmentManager().findFragmentByTag(
-                                currentPosition + titles[currentPosition]
-                        ))
-                        .commit();
+                Fragment fragmentByTag = getFragmentManager().findFragmentByTag(
+                        currentPosition + titles[currentPosition]
+                );
+                if (fragmentByTag != null) {
+                    //如果缓存的fragment不为空就直接从容器里移除即可
+                    getFragmentManager()
+                            .beginTransaction()
+                            .remove(fragmentByTag)
+                            .commit();
+                }
             }
         }
         //fragment的数量必须和title的数量保持一致

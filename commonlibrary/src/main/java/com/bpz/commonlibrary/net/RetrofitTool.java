@@ -10,6 +10,8 @@ import com.bpz.commonlibrary.net.interceptor.ProgressInterceptor;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +21,7 @@ import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -42,6 +45,8 @@ public class RetrofitTool {
         //okBuilder = new OkHttpClient.Builder();
         //设置OkHttpClitent;
         okClient = new OkHttpClient.Builder()
+                //协议配置
+                //.protocols(Collections.unmodifiableList(Arrays.asList(Protocol.HTTP_1_1, Protocol.HTTP_2)))
                 .readTimeout(ConfigFields.READ_TIME_OUT, TimeUnit.MINUTES)
                 .connectTimeout(ConfigFields.CONNECT_TIME_OUT, TimeUnit.MINUTES)
                 .writeTimeout(ConfigFields.WRITE_TIME_OUT, TimeUnit.MINUTES)
