@@ -55,7 +55,7 @@ public class TestFragment extends BaseRefreshFragment<TestEntity> {
         banner.setDataList(list);
         banner.setBannerListener(new PBanner.BannerListener<BannerEntity>() {
             @Override
-            public void onItemClick(int position, BannerEntity itemData) {
+            public void onItemClick(View v,int position, BannerEntity itemData) {
                 //条目点击事件
                 String bannerClickUrl = itemData.getBannerClickUrl();
                 //webViewFragmentN.loadWebPage(bannerClickUrl);

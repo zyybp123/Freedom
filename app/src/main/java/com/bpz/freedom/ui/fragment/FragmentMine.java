@@ -5,18 +5,25 @@ import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bpz.commonlibrary.adapter.MyFilterBarAdapter;
+import com.bpz.commonlibrary.interf.listener.OnItemClickListener;
 import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.ui.fragment.BaseFragment;
+import com.bpz.commonlibrary.ui.pop.BasePage;
+import com.bpz.commonlibrary.ui.pop.PPopupWindow;
+import com.bpz.commonlibrary.ui.widget.LinearContainer;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.commonlibrary.util.SPUtil;
 import com.bpz.commonlibrary.util.SpanUtil;
 import com.bpz.commonlibrary.util.StringUtil;
 import com.bpz.freedom.R;
+import com.bpz.freedom.entity.FilterTestEntity;
 import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
@@ -27,7 +34,9 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
@@ -38,6 +47,7 @@ public class FragmentMine extends BaseFragment {
     TextView tvTest;
     SmartRefreshLayout refreshLayout;
     LinearLayout llTest;
+    LinearContainer filterBar;
 
     @Override
     public boolean isNeedLazy() {
@@ -64,6 +74,7 @@ public class FragmentMine extends BaseFragment {
         etHost = mRootView.findViewById(R.id.et_host);
         tvSure = mRootView.findViewById(R.id.btn_sure);
         tvTest = mRootView.findViewById(R.id.tv_test);
+        filterBar = mRootView.findViewById(R.id.fr_filter_bar);
         tvTest.setMovementMethod(LinkMovementMethod.getInstance());
         refreshLayout = mRootView.findViewById(R.id.fr_refresh_layout);
         llTest = mRootView.findViewById(R.id.ll_test);
@@ -159,8 +170,25 @@ public class FragmentMine extends BaseFragment {
                 //SPUtil.getInstance("config").put("aaa", 123);
             }
         });
-
-
+        List<FilterTestEntity> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            FilterTestEntity entity = new FilterTestEntity();
+            entity.setBarTile("筛选条件" + i);
+            list.add(entity);
+        }
+        final PPopupWindow pPopupWindow = new PPopupWindow(mActivity);
+        //filterBar.mParams.gravity = Gravity.CENTER;
+        filterBar.setAdapter(new MyFilterBarAdapter<>(list,
+                new OnItemClickListener<FilterTestEntity>() {
+                    @Override
+                    public void onItemClick(View v, int position, FilterTestEntity itemData) {
+                        switch (position) {
+                            case 0:
+                                //pPopupWindow.showPop(v, false);
+                                break;
+                        }
+                    }
+                }));
     }
 
     private void dataHereMore() {

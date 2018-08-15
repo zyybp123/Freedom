@@ -22,7 +22,7 @@ public abstract class BasePage<T> {
      */
     private View mRootView;
 
-    BasePage(Context context, List<T> data, OnItemClickListener<T> listener, boolean isWrapContent) {
+    public BasePage(Context context, List<T> data, OnItemClickListener<T> listener, boolean isWrapContent) {
         this.context = context;
         this.data = data;
         this.listener = listener;

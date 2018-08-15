@@ -87,7 +87,7 @@ public class Adapter2Banner<T> extends RecyclerView.Adapter<Adapter2Banner.MyVie
                 public void onClick(View v) {
                     //点击事件
                     if (itemClickListener != null) {
-                        itemClickListener.onItemClick(position, getData(position));
+                        itemClickListener.onItemClick(v,position, getData(position));
                     }
                 }
             });

@@ -88,7 +88,7 @@ public abstract class MyBaseRecyclerAdapter<T extends ListData, V extends MyBase
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null) {
-                        itemClickListener.onItemClick(layoutPosition, data);
+                        itemClickListener.onItemClick(v,layoutPosition, data);
                     }
                 }
             });

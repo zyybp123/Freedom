@@ -94,7 +94,7 @@ public class BannerPagerAdapter<T> extends BasePagerAdapter<T> {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        clickListener.onItemClick(realPosition, data);
+                        clickListener.onItemClick(v,realPosition, data);
                     }
                 });
             }

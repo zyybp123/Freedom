@@ -43,8 +43,8 @@ import java.util.Locale;
  * 模式：标题，数字，数字+标题，指示器，指示器+标题，
  */
 public class PBanner<T extends BannerData> extends FrameLayout implements
-        OnItemClickListener<T>, OnImgShowListener<T>, ViewPager.OnPageChangeListener ,
-        View.OnTouchListener{
+        OnItemClickListener<T>, OnImgShowListener<T>, ViewPager.OnPageChangeListener,
+        View.OnTouchListener {
     private static final String TAG = "PBanner";
     /**
      * 因为只作为banner用，所以控制其数据量最大为10个
@@ -145,7 +145,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         mTvNum = rootView.findViewById(R.id.p_banner_num);
         mLCIndicator = rootView.findViewById(R.id.p_banner_indicator);
         mAdapter = new BannerPagerAdapter<>(mDataList, this,
-                defaultEmptyImg, this,this);
+                defaultEmptyImg, this, this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.addOnPageChangeListener(this);
         //mViewPager.setOnTouchListener(this);
@@ -262,31 +262,15 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
         indicatorAdapter.notifyDataSetChanged();
     }
 
-    public void autoStart() {
-        if (canLoop()) {
-            periodicUtil.start();
-        }
-    }
-
-    private boolean canLoop() {
-        return isAutoLoop && periodicUtil != null && mDataList.size() > 1;
-    }
-
-    public void autoStop() {
-        if (canLoop()) {
-            periodicUtil.stop();
-        }
-    }
-
     public void setBannerListener(BannerListener<T> bannerListener) {
         this.bannerListener = bannerListener;
     }
 
     @Override
-    public void onItemClick(int position, T itemData) {
+    public void onItemClick(View v, int position, T itemData) {
         //跳转的链接
         if (bannerListener != null) {
-            bannerListener.onItemClick(position, itemData);
+            bannerListener.onItemClick(v, position, itemData);
         }
     }
 
@@ -370,7 +354,7 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 autoStop();
                 break;
@@ -379,6 +363,22 @@ public class PBanner<T extends BannerData> extends FrameLayout implements
                 break;
         }
         return false;
+    }
+
+    public void autoStop() {
+        if (canLoop()) {
+            periodicUtil.stop();
+        }
+    }
+
+    public void autoStart() {
+        if (canLoop()) {
+            periodicUtil.start();
+        }
+    }
+
+    private boolean canLoop() {
+        return isAutoLoop && periodicUtil != null && mDataList.size() > 1;
     }
 
     public interface Model {
