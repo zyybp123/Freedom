@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.util.SimpleArrayMap;
 
 import com.bpz.commonlibrary.interf.listener.OnHeaderOptionListener;
+import com.bpz.commonlibrary.util.ChineseToHanYuPYTest;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -30,6 +31,7 @@ public class LibApp {
     public static Context mContext;
     public static SimpleArrayMap<String, String> mBaseUrlMap;
     public static boolean needCache;
+    public static ChineseToHanYuPYTest chineseToHanYuPYTest;
 
     //static 代码段可以防止内存泄露
     static {
@@ -62,6 +64,8 @@ public class LibApp {
     public static void init(@NonNull Context context, @NonNull SimpleArrayMap<String, String> baseUrlMap) {
         mContext = context;
         mBaseUrlMap = baseUrlMap;
+        //初始化加载多音字字典
+        chineseToHanYuPYTest = new ChineseToHanYuPYTest("duoyinzi_dic.txt");
 
     }
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fr_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/ll_test"
@@ -47,10 +48,29 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="#EFEFEF"
+            android:visibility="gone"
             app:mIsAverage="true">
 
         </com.bpz.commonlibrary.ui.widget.LinearContainer>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.bpz.commonlibrary.ui.widget.BigImgDragView
+                android:id="@+id/bidv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="xxxxxxxxxxxxxxx" />
+        </FrameLayout>
+
+
     </LinearLayout>
 
 
-</com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

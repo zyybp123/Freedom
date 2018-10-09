@@ -1,12 +1,13 @@
 package com.bpz.freedom.ui.fragment;
 
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,29 +16,27 @@ import com.bpz.commonlibrary.adapter.MyFilterBarAdapter;
 import com.bpz.commonlibrary.interf.listener.OnItemClickListener;
 import com.bpz.commonlibrary.mvp.BasePresenter;
 import com.bpz.commonlibrary.ui.fragment.BaseFragment;
-import com.bpz.commonlibrary.ui.pop.BasePage;
 import com.bpz.commonlibrary.ui.pop.PPopupWindow;
+import com.bpz.commonlibrary.ui.widget.BigImgDragView;
 import com.bpz.commonlibrary.ui.widget.LinearContainer;
+import com.bpz.commonlibrary.ui.widget.MySurfaceView3;
 import com.bpz.commonlibrary.util.LogUtil;
-import com.bpz.commonlibrary.util.SPUtil;
 import com.bpz.commonlibrary.util.SpanUtil;
 import com.bpz.commonlibrary.util.StringUtil;
 import com.bpz.freedom.R;
 import com.bpz.freedom.entity.FilterTestEntity;
-import com.bpz.freedom.entity.tzq.LoginInfo;
 import com.bpz.freedom.global.Freedom;
 import com.bpz.freedom.net.TzqHost;
 import com.bpz.freedom.ui.SomeTestActivity;
-import com.google.gson.Gson;
 import com.qmuiteam.qmui.widget.textview.QMUILinkTextView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
 
 public class FragmentMine extends BaseFragment {
@@ -45,9 +44,11 @@ public class FragmentMine extends BaseFragment {
     EditText etHost;
     TextView tvSure;
     TextView tvTest;
-    SmartRefreshLayout refreshLayout;
     LinearLayout llTest;
     LinearContainer filterBar;
+    Unbinder unbinder;
+    @BindView(R.id.bidv)
+    BigImgDragView bidv;
 
     @Override
     public boolean isNeedLazy() {
@@ -76,7 +77,6 @@ public class FragmentMine extends BaseFragment {
         tvTest = mRootView.findViewById(R.id.tv_test);
         filterBar = mRootView.findViewById(R.id.fr_filter_bar);
         tvTest.setMovementMethod(LinkMovementMethod.getInstance());
-        refreshLayout = mRootView.findViewById(R.id.fr_refresh_layout);
         llTest = mRootView.findViewById(R.id.ll_test);
         String text = "vafiz12yyhaasf你好sz12yyi你好dofizSLLLLL11yyaaaslsdf你zyy好slkdajfiojos你好a你好id" +
                 "jfohd你好你好soifwsdsshszyyohfasil你好lkzSL12LL展开全文LLyylswsdss";
@@ -116,49 +116,6 @@ public class FragmentMine extends BaseFragment {
             }
         });
 
-        refreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(3000);
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dataHereMore();
-                                }
-                            });
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
-            }
-
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(3000);
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    dataHere();
-                                }
-                            });
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }.start();
-            }
-        });
-
-
         tvSure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,15 +146,18 @@ public class FragmentMine extends BaseFragment {
                         }
                     }
                 }));
+
+        //bidv.setZOrderOnTop(true);
+        //bidv.getHolder().setFormat(PixelFormat.RGBA_8888);
+
+        //bidv.setZOrderMediaOverlay(true);
+
+        /*bidv.setBitmap(BitmapFactory.decodeFile(
+                "/sdcard/MagazineUnlock/" +
+                        "blues-13-2.3.001-bigpicture_13_1_land.jpg"));*/
+
     }
 
-    private void dataHereMore() {
-        refreshLayout.finishLoadMore();
-    }
-
-    private void dataHere() {
-        refreshLayout.finishRefresh();
-    }
 
     @Override
     public void onSubscribe(String methodTag, Disposable d) {
@@ -222,5 +182,19 @@ public class FragmentMine extends BaseFragment {
     @Override
     public void noNet() {
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

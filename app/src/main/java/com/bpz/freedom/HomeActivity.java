@@ -13,6 +13,7 @@ import com.bpz.commonlibrary.entity.BottomBarBean;
 import com.bpz.commonlibrary.adapter.MyBottomBarAdapter;
 import com.bpz.commonlibrary.util.LogUtil;
 import com.bpz.freedom.ui.fragment.FragmentMine;
+import com.bpz.freedom.ui.fragment.SortBarTestFragment;
 import com.bpz.freedom.ui.fragment.TestFragment;
 import com.bpz.freedom.ui.fragment.TestFragment2;
 
@@ -67,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements MyBottomBarAdapte
         //fragmentList.add(new CategoryFragment());
         fragmentList.add(WebViewFragmentN.newInstance("https://www.baidu.com",
                 WebViewFragmentN.URL_ONLY, null, false));
-        fragmentList.add(new TestFragment());
+        fragmentList.add(new SortBarTestFragment());
         fragmentList.add(new FragmentMine());
 
         if (savedInstanceState != null) {
